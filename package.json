@@ -1,0 +1,91 @@
+{
+  "name": "memlin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "7.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-typescript": "^7.8.3",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@types/jest": "^26.0.8",
+    "@typescript-eslint/eslint-plugin": "^2.10.0",
+    "@typescript-eslint/parser": "^2.10.0",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-named-asset-import": "^0.3.6",
+    "eslint": "^6.6.0",
+    "eslint-loader": "3.0.3",
+    "eslint-plugin-flowtype": "4.6.0",
+    "eslint-plugin-import": "2.20.1",
+    "jest": "24.9.0",
+    "jest-resolve": "24.9.0",
+    "jest-watch-typeahead": "0.4.2",
+    "semver": "6.3.0",
+    "ts-pnp": "1.1.6",
+    "typescript": "^3.9.7",
+    "url-loader": "2.3.0",
+    "webpack": "^5.4.0"
+  },
+  "scripts": {
+    "build": "rm -rf ./lib && node ./node_modules/@babel/cli/bin/babel.js ./src -d lib --extensions \".js,.ts\" --ignore \"src/**/*.spec.js\",\"src/**/*.test.js\",\"src/**/*.spec.ts\",\"src/**/*.test.ts\"",
+    "test": "./node_modules/jest/bin/jest"
+  },
+  "eslintConfig": {},
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}",
+      "!src/**/*.d.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,ts}",
+      "<rootDir>/src/**/*.{spec,test}.{js,ts}"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|ts)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|ts)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/fileMock.js"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/typescript"
+    ]
+  }
+}
