@@ -1,5 +1,3 @@
-//import { addEdge, addVertex } from './graph'
-import { v4 as uuidv4 } from 'uuid'
 
 export const newGraph = { edges: [], vertices: []}
 
@@ -16,34 +14,13 @@ export function updateTraverser(traverser, s, args) {
         args.labels.forEach(label=> traverser.labels[label]=s)
 }
 
-export const addV = (label, props) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
-    const id = uuidv4()
-    const v = {label, id, props}
-    traverser.g.vertices.push(v)
-        
-    updateTraverser(traverser, [v], args)
-    return traverser
-    
+export function isV(el) {
+    return el.label && el.id && !el.to
 }
 
-export const addE = (label, props) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
-    const ft = {to: traverser.s[0], from: traverser.s[0], ...args}
-    const id = uuidv4()
-    const e= {label, id, from: ft.from, to: ft.to, props }
-
-    traverser.g.edges.push(e)
-    updateTraverser(traverser, [e], args)
-    return  traverser
+export function isE(el) {
+    return el.label && el.id && el.to
 }
 
-export const toV = (to) => (getCurrentTraverser) => (args)=> { 
-    return getCurrentTraverser({to: to, ...args}) 
-}
-
-export const fromV = (from) => (getCurrentTraverser) => (args)=> { 
-    return getCurrentTraverser({from: from, ...args}) 
-}
 
 

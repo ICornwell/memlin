@@ -1,4 +1,5 @@
-import {G as GT, newGraph, addV, addE, to, from} from './traverser'
+import {G as GT, newGraph} from './traverser'
+import {addV, addE, to, from} from './steps/addSteps'
 import {V, E} from './steps/graphSteps'
 import {has, hasLabel, hasKey} from './steps/hasSteps'
 import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertexSteps'
@@ -7,12 +8,24 @@ export function G() {
 
     const g=({ context: { graph: newGraph} })
 
-    g.execute = (graph) => { g.context.graph = graph
-        return g.query()
+    // run the query with the graph and a new, empty traversal list
+    g.execute = (graph) => { 
+        g.context.graph = graph
+        g.context.s = [[]]
+        return g.query(g.context)
+    }
+
+    g.subQuery = (context) => {
+        // run the subquery for the same graph, but create a new traversal list
+        // based on a copy of the head of the parent query
+        g.context.graph = context.graph
+        g.context.s = [ ...context.s[0] ]
+        return g.query().s[0]
     }
 
     g.query =  () =>GT(g.context.graph)
 
+    // boilder-plate addition of all the steps to create the fluent chaining methods
     g.addV = (label, props) => { g.query = addV(label,props)(g.query); return g }
     g.addE = (label, props) => { g.query = addE(label,props)(g.query); return g }
     g.to = (vertex) => { g.query = to(vertex)(g.query); return g }

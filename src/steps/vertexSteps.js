@@ -1,15 +1,9 @@
-import {updateTraverser} from '../traverser'
+import {updateTraverser, isV, isE} from '../traverser'
 
-function isV(el) {
-    return el.label && el.id && !el.to
-}
 
-function isE(el) {
-    return el.label && el.id && el.to
-}
 
 export const out = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => e.from === v.id && (labels.length === 0 || labels.includes(e.label)))) // find outbound edges
@@ -20,7 +14,7 @@ export const out = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const in_ = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => e.to === v.id && (labels.length === 0 || labels.includes(e.label)))) // find inbound edges
@@ -31,7 +25,7 @@ export const in_ = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const both = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const sin = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => e.to === v.id && (labels.length === 0 || labels.includes(e.label)))) // find outbound edges
@@ -44,7 +38,7 @@ export const both = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const outE = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => e.from === v.id && (labels.length === 0 || labels.includes(e.label)))) // find outbound edges
@@ -54,7 +48,7 @@ export const outE = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const inE = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => e.to === v.id && (labels.length === 0 || labels.includes(e.label)))) // find inbound edges
@@ -64,7 +58,7 @@ export const inE = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const bothE = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isV)
                 .flatMap(v => traverser.g.edges.filter(e => (e.to === v.id || e.from === v.id ) && (labels.length === 0 || labels.includes(e.label)))) // find both edges
@@ -74,7 +68,7 @@ export const bothE = (...labels) => (getCurrentTraverser) => (args) => {
 }
 
 export const outV = () => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isE)
                 .flatMap(e => traverser.g.vertices.filter(v => e.to === v.id)) // find outbound vertices
@@ -84,7 +78,7 @@ export const outV = () => (getCurrentTraverser) => (args) => {
 }
 
 export const inV = () => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isE)
                 .flatMap(e => traverser.g.vertices.filter(v => e.from === v.id )) // find inbound vertices
@@ -94,7 +88,7 @@ export const inV = () => (getCurrentTraverser) => (args) => {
 }
 
 export const bothV = () => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
 
     const s = traverser.s[0].filter(isE)
                 .flatMap(e => traverser.g.vertices.filter(v => (e.to === v.id || e.from === v.id ))) // find both vertices

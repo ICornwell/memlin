@@ -1,7 +1,7 @@
 import {updateTraverser} from '../traverser'
 
 export const V = (id) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
     
     const s = id ? [traverser.g.vertices.find(v => v.id === id)]
         : traverser.g.vertices 
@@ -10,7 +10,7 @@ export const V = (id) => (getCurrentTraverser) => (args) => {
 }
 
 export const E = (id) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser()
+    const traverser = getCurrentTraverser(args)
     
     const s = id ? [traverser.g.edges.find(e => e.id === id)]
         : traverser.g.edges 
