@@ -1,4 +1,3 @@
-//import { addEdge, addVertex } from './graph'
 import { v4 as uuidv4 } from 'uuid'
 import {updateTraverser, isV} from '../traverser'
 
@@ -24,6 +23,7 @@ export const addE = (label, props) => (getCurrentTraverser) => (args) => {
     const vs = traverser.s[0].filter(isV).map(v=>v.id)
     const ft = {to: vs, from: vs, ...myArgs}
     
+    // support multiple 'to's and 'froms' to create multiple edges
     const es = ft.to.flatMap(to=>
         ft.from.flatMap(from=> ({
             label,
@@ -39,6 +39,7 @@ export const addE = (label, props) => (getCurrentTraverser) => (args) => {
     return  traverser
 }
 
+// TODO: to and from steps can modulate other steps, so should be moved from the 'add' steps module, into their own
 export const to = (to) => (getCurrentTraverser) => (args)=> {
     to = resolveTraverserArg(to,args)
     to = ensureIsArray(to) 
@@ -50,6 +51,8 @@ export const from = (from) => (getCurrentTraverser) => (args)=> {
     return getCurrentTraverser({from: from, ...args}) 
 }
 
+
+// TODO: these functions should be re-usable, so should be moved to traverser.js
 function ensureIsArray(arg) {
     if (!Array.isArray(arg))
         arg=[arg]
