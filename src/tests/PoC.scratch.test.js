@@ -14,20 +14,20 @@ test('scratch', () => {
     // something in jest isn't fond of these chained function declarations
     // and keeps marking the test with a red triangle, but they execute ok.
 
-    const addV = (n) => (getCurrentTraverser) => (args) => { 
-        const traverser = getCurrentTraverser()
+    const addV = (n) => (getCurrentContext) => (args) => { 
+        const traverser = getCurrentContext()
         traverser.g.vertices.push(n)
         traverser.s.unshift(n)
         return  traverser
     }
 
-    const addE = (n) => (getCurrentTraverser) => (args) => { 
+    const addE = (n) => (getCurrentContext) => (args) => { 
         const myArgs = { ...args }
         // consume the modulator args that this uses
         delete args.to
         delete args.from
 
-        const traverser = getCurrentTraverser(args)
+        const traverser = getCurrentContext(args)
         const ft = {to: traverser.s[0], from: traverser.s[0], ...myArgs}
         const e= {e:n, vf:ft.from, vt:ft.to }
         traverser.g.edges.push(e)
@@ -35,12 +35,12 @@ test('scratch', () => {
         return  traverser
     }
 
-    const to = (to) => (getCurrentTraverser) => (args)=> { 
-        return getCurrentTraverser({to: to, ...args}) 
+    const to = (to) => (getCurrentContext) => (args)=> { 
+        return getCurrentContext({to: to, ...args}) 
     }
 
-    const from = (from) => (getCurrentTraverser) => (args)=> { 
-        return getCurrentTraverser({from: from, ...args}) 
+    const from = (from) => (getCurrentContext) => (args)=> { 
+        return getCurrentContext({from: from, ...args}) 
     }
 
         

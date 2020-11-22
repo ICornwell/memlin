@@ -11,12 +11,12 @@ const testGraph = {
         { label: 'software', id: '1234-abcd-xyz5', props: { name: 'lop', lang: 'java' } }
     ],
     edges: [
-        { label: 'created', id: '5678-abcd-xyz0', from: '1234-abcd-xyz0', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz1', from: '1234-abcd-xyz2', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz2', from: '1234-abcd-xyz3', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz3', from: '1234-abcd-xyz3', to: '1234-abcd-xyz4' },
-        { label: 'knows', id: '5678-abcd-xyz4', from: '1234-abcd-xyz0', to: '1234-abcd-xyz1' },
-        { label: 'knows', id: '5678-abcd-xyz5', from: '1234-abcd-xyz0', to: '1234-abcd-xyz3' }
+        { label: 'created', id: '5678-abcd-xyz0', in: '1234-abcd-xyz0', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz1', in: '1234-abcd-xyz2', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz2', in: '1234-abcd-xyz3', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz3', in: '1234-abcd-xyz3', out: '1234-abcd-xyz4' },
+        { label: 'knows', id: '5678-abcd-xyz4', in: '1234-abcd-xyz0', out: '1234-abcd-xyz1' },
+        { label: 'knows', id: '5678-abcd-xyz5', in: '1234-abcd-xyz0', out: '1234-abcd-xyz3' }
     ]
 }
 
@@ -28,7 +28,7 @@ test('has Label Key Value', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(2)
+    expect(r.traversers.length).toBe(2)
 })
 
 test('hasLabel', () => {
@@ -38,7 +38,7 @@ test('hasLabel', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(4)
+    expect(r.traversers.length).toBe(4)
 })
 
 test('hasLabel (multiple', () => {
@@ -48,7 +48,7 @@ test('hasLabel (multiple', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(2)
+    expect(r.traversers.length).toBe(2)
 })
 
 test('has Key', () => {
@@ -58,7 +58,7 @@ test('has Key', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(6)
+    expect(r.traversers.length).toBe(6)
 })
 
 test('hasKey', () => {
@@ -68,7 +68,7 @@ test('hasKey', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(6)
+    expect(r.traversers.length).toBe(6)
 })
 
 test('has KeyValue', () => {
@@ -78,6 +78,6 @@ test('has KeyValue', () => {
 
     const r = q.execute(g)
 
-    expect(r.s[0].length).toBe(1)
+    expect(r.traversers.length).toBe(1)
 })
 

@@ -1,19 +1,27 @@
-import {updateTraverser} from '../traverser'
+import {updateContext, updateTraverser} from '../traverser'
 
-export const V = (id) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    
-    const s = id ? [traverser.g.vertices.find(v => v.id === id)]
-        : traverser.g.vertices 
-    updateTraverser(traverser, s, args)
-    return  traverser
+export const V = (id) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+    const ts = context.traversers.flatMap(t=> {
+        const vs = id ? [context.graph.vertices.find(v => v.id === id)]
+            : context.graph.vertices 
+        return vs.map(v=> {
+            return updateTraverser(t, v, args)
+        })
+    })
+    return updateContext(context, ts)
 }
 
-export const E = (id) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    
-    const s = id ? [traverser.g.edges.find(e => e.id === id)]
-        : traverser.g.edges 
-    updateTraverser(traverser, s, args)
-    return  traverser
+export const E = (id) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+        
+    const ts = context.traversers.flatMap(t=> {
+        const es = id ? [context.graph.edges.find(v => v.id === id)]
+            : context.graph.edges 
+        return es.map(e=> {
+            return updateTraverser(t, e, args)
+        })
+    })
+
+    return updateContext(context, ts)
 }

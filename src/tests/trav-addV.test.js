@@ -9,10 +9,10 @@ test('add simple vertex to new graph', () => {
 
     const r = q.execute()
 
-    expect(r.g.vertices.length).toBe(1)
-    expect(r.g.vertices.find(v=>v.label === 'bob').props.age).toBe(37)
+    expect(r.graph.vertices.length).toBe(1)
+    expect(r.graph.vertices.find(v=>v.label === 'bob').props.age).toBe(37)
 
-    expect(r.s[0][0].label).toBe('bob')
+    expect(r.traversers[0].objects[0].label).toBe('bob')
 })
 
 test('add simple vertex to existing graph', () => {
@@ -22,8 +22,8 @@ test('add simple vertex to existing graph', () => {
     const q = G().addV('bob', { name: 'bob', age: 37 })
     const r = q.execute(gr)
 
-    expect(r.g.vertices.length).toBe(2)
-    expect(r.g.vertices.find(v=>v.label === 'bob').props.age).toBe(37)
+    expect(r.graph.vertices.length).toBe(2)
+    expect(r.graph.vertices.find(v=>v.label === 'bob').props.age).toBe(37)
 
-    expect(r.s[0][0].label).toBe('bob')
+    expect(r.traversers[0].objects[0].label).toBe('bob')
 });

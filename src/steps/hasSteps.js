@@ -1,4 +1,4 @@
-import {updateTraverser} from '../traverser'
+import {updateContext} from '../traverser'
 
 export const has = (...hasArgs) => { 
     if (hasArgs.length===1)
@@ -9,30 +9,27 @@ export const has = (...hasArgs) => {
         return hasLabelKeyValue(hasArgs[0], hasArgs[1], hasArgs[2])
 }
 
-export const hasLabel = (...labels) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    const s = traverser.s[0].filter(el=>el.label && labels.includes(el.label))
-    updateTraverser(traverser, s, args)
-    return  traverser
+export const hasLabel = (...labels) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+    const filtered = context.traversers.filter(t=>t.objects[0].label && labels.includes(t.objects[0].label))
+    return updateContext(context, filtered)
 }
 
-export const hasKey = (...keys) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    const s = traverser.s[0].filter(el=>el.props && Object.keys(el).filter(k=>keys.includes(k)))
-    updateTraverser(traverser, s, args)
-    return  traverser
+export const hasKey = (...keys) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+    const filtered = context.traversers.filter(t=>t.objects[0].props && Object.keys(t.objects[0]).filter(k=>keys.includes(k)))
+    return updateContext(context, filtered)
 }
 
-const hasKeyValue = (key, value) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    const s = traverser.s[0].filter(el=>el.props && el.props[key] === value)
-    updateTraverser(traverser, s, args)
-    return  traverser
+const hasKeyValue = (key, value) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+    const filtered = context.traversers.filter(t=>t.objects[0].props && t.objects[0].props[key] === value)
+    return updateContext(context, filtered)
 }
 
-const hasLabelKeyValue = (label, key, value) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    const s = traverser.s[0].filter(el=>el.label && el.label === label && el.props && el.props[key] === value)
-    updateTraverser(traverser, s, args)
-    return  traverser
+const hasLabelKeyValue = (label, key, value) => (getCurrentContext) => (args) => { 
+    const context = getCurrentContext(args)
+    const filtered = context.traversers.filter(t=>t.objects[0].label && t.objects[0].label === label && t.objects[0].props && t.objects[0].props[key] === value)
+    return updateContext(context, filtered)
+    
 }

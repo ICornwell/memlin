@@ -1,54 +1,70 @@
 import { v4 as uuidv4 } from 'uuid'
-import {updateTraverser, isV} from '../traverser'
+import {updateTraverser, updateContext, isV} from '../traverser'
 
 
-export const addV = (label, props) => (getCurrentTraverser) => (args) => { 
-    const traverser = getCurrentTraverser(args)
-    const id = uuidv4()
-    const v = {label, id, props}
-    traverser.g.vertices.push(v)
+export const addV = (label, props) => (getCurrentContext) => (args) => { 
+    // map/side-effect step
+    const context = getCurrentContext(args)
+
+    const ts = context.traversers.map(t=> {
+        const id = uuidv4()
+        const v = {label, id, props}
+        context.graph.vertices.push(v)
+
+        return updateTraverser(t, v, args)
+    } )
         
-    updateTraverser(traverser, [v], args)
-    return traverser
-    
+    return updateContext(context, ts)
 }
 
-export const addE = (label, props) => (getCurrentTraverser) => (args) => { 
+export const addE = (label, props) => (getCurrentContext) => (args) => { 
+    // map/side-effect step
     const myArgs = { ...args }
     // this step consumes 'to' and 'from args from upstream modulators
-    delete args.to
-    delete args.from
+    delete args.out
+    delete args.in
 
-    const traverser = getCurrentTraverser(args)
-    const vs = traverser.s[0].filter(isV).map(v=>v.id)
-    const ft = {to: vs, from: vs, ...myArgs}
-    
+    const context = getCurrentContext(args)
+    const vs = context.traversers.filter(t=>isV(t.objects[0]))
+    const ft = {out: [undefined], in: [undefined], ...myArgs}
+
+    const travIsIn  = !(myArgs.in)
+    const travIsOut  = !(myArgs.out)
+
+    const idOrVal = (x) => x.id ? x.id : x
+
     // support multiple 'to's and 'froms' to create multiple edges
-    const es = ft.to.flatMap(to=>
-        ft.from.flatMap(from=> ({
-            label,
-            id: uuidv4(),
-            from: from,
-            to: to,
-            props
-        })
+    // and map from the original traverser
+    const ts = vs.flatMap(t=>
+        ft.out.flatMap(out=>
+            ft.in.flatMap(in_=> {
+                const e = {
+                    label,
+                    id: uuidv4(),
+                    in: travIsIn ? t.objects[0].id : idOrVal(in_),
+                    out: travIsOut ? t.objects[0].id : idOrVal(out),
+                    props
+                }
+                context.graph.edges.push(e)    
+                return updateTraverser(t, e, args)
+            }
+            )
         )
     )
-    traverser.g.edges.push(...es)
-    updateTraverser(traverser, es, args)
-    return  traverser
+
+    return updateContext(context, ts)
 }
 
 // TODO: to and from steps can modulate other steps, so should be moved from the 'add' steps module, into their own
-export const to = (to) => (getCurrentTraverser) => (args)=> {
+export const to = (to) => (getCurrentContext) => (args)=> {
     to = resolveTraverserArg(to,args)
     to = ensureIsArray(to) 
-    return getCurrentTraverser({to: to, ...args}) 
+    return getCurrentContext({out: to, ...args}) 
 }
 
-export const from = (from) => (getCurrentTraverser) => (args)=> {
+export const from = (from) => (getCurrentContext) => (args)=> {
     from = ensureIsArray(from) 
-    return getCurrentTraverser({from: from, ...args}) 
+    return getCurrentContext({in: from, ...args}) 
 }
 
 

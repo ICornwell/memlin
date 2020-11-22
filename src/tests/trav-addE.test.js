@@ -10,10 +10,10 @@ const testGraph = {
         { label: 'software', id: '1234-abcd-xyz5', props: { name: 'lop', lang: 'java' } }
     ],
     edges: [
-        { label: 'created', id: '5678-abcd-xyz0', from: '1234-abcd-xyz0', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz1', from: '1234-abcd-xyz2', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz2', from: '1234-abcd-xyz3', to: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz3', from: '1234-abcd-xyz3', to: '1234-abcd-xyz4' }
+        { label: 'created', id: '5678-abcd-xyz0', in: '1234-abcd-xyz0', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz1', in: '1234-abcd-xyz2', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz2', in: '1234-abcd-xyz3', out: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz3', in: '1234-abcd-xyz3', out: '1234-abcd-xyz4' }
     ]
 }
 
@@ -25,10 +25,10 @@ test('addE to', () => {
 
     const r = q.execute(g)
 
-    expect(r.g.edges.length).toBe(5)
-    expect(r.s[0][0].label).toBe('knows')
-    expect(r.s[0][0].to).toBe('1234-abcd-xyz1')
-    expect(r.s[0][0].from).toBe('1234-abcd-xyz0')
+    expect(r.graph.edges.length).toBe(5)
+    expect(r.traversers[0].objects[0].label).toBe('knows')
+    expect(r.traversers[0].objects[0].out).toBe('1234-abcd-xyz1')
+    expect(r.traversers[0].objects[0].in).toBe('1234-abcd-xyz0')
 })
 
 test('addE to subquery', () => {
@@ -38,7 +38,7 @@ test('addE to subquery', () => {
 
     const r = q.execute(g)
 
-    expect(r.g.edges.length).toBe(6)
+    expect(r.graph.edges.length).toBe(6)
 
 })
 
