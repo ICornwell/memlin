@@ -1,8 +1,9 @@
-import {G as GT, newGraph} from './traverser'
+import {G as GT, newGraph, updateTraverser} from './traverser'
 import {addV, addE, to, from} from './steps/addSteps'
 import {V, E} from './steps/graphSteps'
 import {has, hasLabel, hasKey} from './steps/hasSteps'
 import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertexSteps'
+import {as} from './steps/asSelectSteps'
 
 export function G() {
 
@@ -14,11 +15,12 @@ export function G() {
         return g.query(g.context)
     }
 
-    g.subQuery = (context) => {
+    g.subQuery = (context, copyTraversers) => {
         // run the subquery for the same graph, but create a new traversal list
         // based on a copy of the head of the parent query
         g.context.graph = context.graph
-        g.context.traversers = [ ...context.traversers ]
+        if (copyTraversers)
+            g.context.traversers = [ ...context.traversers ]
         return g.query().traversers.map(t=>t.objects[0])
     }
 
@@ -46,6 +48,8 @@ export function G() {
     g.outV = () => { g.query = outV()(g.query); return g }
     g.inV = () => { g.query = inV()(g.query); return g }
     g.bothV = () => { g.query = bothV()(g.query); return g }
+
+    g.as = (...labels) => { g.query = as(...labels)(g.query); return g }
 
     return g }
 

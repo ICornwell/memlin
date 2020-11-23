@@ -17,15 +17,13 @@ export function updateTraverser(traverser, obj, args) {
     // rewrite the path stream with the new end-state
     // to allow easy access to the current-state by using [0] indexer
     // we keep all the arrays 'backwards'
-    const newObjects = [ ...traverser.objects ]
-    if (obj)
-        newObjects.unshift ( obj )
-    
-        const end = { 
-                labels : !(args && args.labels) ? traverser.labels : traverser.labels.unshift(...args.labels),
-                objects: newObjects
-            }
-        end.current = end.objects[0]
+    const endLabels = [ !(args && args.labels) ? [] : args.labels, ...traverser.labels]
+    const end = { 
+                labels : obj ? endLabels : [...traverser.labels],
+                objects: obj ? [ obj, ...traverser.objects ] : [ ...traverser.objects ]
+               }
+    // add the 'current' accessor to get the head of the traverser
+    end.current = end.objects[0]
     return end
 }
 

@@ -31,10 +31,10 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     const travIsOut  = !(myArgs.out)
 
     if (myArgs.in)
-        myArgs.in = resolveTraverserArg(myArgs.in, context)
+        myArgs.in = resolveTraverserArg(myArgs.in, context, false)
 
     if (myArgs.out)
-        myArgs.out = resolveTraverserArg(myArgs.out, context)
+        myArgs.out = resolveTraverserArg(myArgs.out, context, false)
 
     const ft = {out: [undefined], in: [undefined], ...myArgs}
 
@@ -82,12 +82,12 @@ function ensureIsArray(arg) {
     return arg
 }
 
-function resolveTraverserArg(arg, context) {
+function resolveTraverserArg(arg, context, copyTraversers) {
     const f = Array.isArray(arg) ? arg[0] : arg
     if (! (f.subQuery && {}.toString.call(f.subQuery) === '[object Function]'))
         return arg
     if (f.subQuery)
-        return f.subQuery(context)   
+        return f.subQuery(context, copyTraversers)   
 }
 
 
