@@ -1,7 +1,12 @@
 
 export const newGraph = { edges: [], vertices: []}
 
-export const G = (g) =>  ({ graph: g ? g : newGraph, traversers: [ {lables: [], objects: [] }] }) // G is a function that gets a new traverser
+export const G = (g) =>  {
+    const context = { graph: g ? g : newGraph }
+    const emptyInitialTraverser = {labels: [], objects: [] }
+    const initialisedTraversers = [updateTraverser(emptyInitialTraverser)] 
+    return updateContext(context, initialisedTraversers)
+} // G is a function that gets a new traverser
 
 // the following functions take some local args and returns a function thats the current
 // traverser and returns another function that accepts modulator args (or not), and 
@@ -13,11 +18,14 @@ export function updateTraverser(traverser, obj, args) {
     // to allow easy access to the current-state by using [0] indexer
     // we keep all the arrays 'backwards'
     const newObjects = [ ...traverser.objects ]
-    newObjects.unshift ( obj )
-    const end = { 
+    if (obj)
+        newObjects.unshift ( obj )
+    
+        const end = { 
                 labels : !(args && args.labels) ? traverser.labels : traverser.labels.unshift(...args.labels),
                 objects: newObjects
             }
+        end.current = end.objects[0]
     return end
 }
 

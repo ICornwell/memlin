@@ -29,7 +29,7 @@ test('out', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(4)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(0) // no edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('out (by id)', () => {
@@ -40,7 +40,7 @@ test('out (by id)', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(2)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(0) // no edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('in', () => {
@@ -51,7 +51,7 @@ test('in', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(2)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(0) // no edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 
@@ -64,7 +64,7 @@ test('both', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(3)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(0) // no edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('outE', () => {
@@ -75,7 +75,7 @@ test('outE', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(4)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(4) // all edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(4) // all edges!
 })
 
 test('outE (by id)', () => {
@@ -86,7 +86,7 @@ test('outE (by id)', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(2)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(2) // all edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(2) // all edges!
 })
 
 test('inE', () => {
@@ -97,7 +97,7 @@ test('inE', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(2)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(2) // all edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(2) // all edges!
 })
 
 
@@ -110,7 +110,7 @@ test('bothE', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(3)
-    expect(r.traversers.filter(t=>t.objects[0].out).length).toBe(3) // all edges!
+    expect(r.traversers.filter(t=>t.current.out).length).toBe(3) // all edges!
 })
 
 test('outV (by id)', () => {
@@ -121,7 +121,7 @@ test('outV (by id)', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(1)
-    expect(r.traversers[0].objects[0].id).toBe('1234-abcd-xyz5')
+    expect(r.traversers[0].current.id).toBe('1234-abcd-xyz5')
 })
 
 test('inV', () => {
@@ -132,7 +132,7 @@ test('inV', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(1)
-    expect(r.traversers[0].objects[0].id).toBe('1234-abcd-xyz2')
+    expect(r.traversers[0].current.id).toBe('1234-abcd-xyz2')
 })
 
 
@@ -145,7 +145,7 @@ test('bothV', () => {
     const r = q.execute(g)
 
     expect(r.traversers.length).toBe(2)
-    const ids = r.traversers.map(t=>t.objects[0].id)
+    const ids = r.traversers.map(t=>t.current.id)
     expect(ids).toContain('1234-abcd-xyz2')
     expect(ids).toContain('1234-abcd-xyz5')  
 })

@@ -11,25 +11,25 @@ export const has = (...hasArgs) => {
 
 export const hasLabel = (...labels) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.objects[0].label && labels.includes(t.objects[0].label))
+    const filtered = context.traversers.filter(t=>t.current.label && labels.includes(t.current.label))
     return updateContext(context, filtered)
 }
 
 export const hasKey = (...keys) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.objects[0].props && Object.keys(t.objects[0]).filter(k=>keys.includes(k)))
+    const filtered = context.traversers.filter(t=>t.current.props && Object.keys(t.current).filter(k=>keys.includes(k)))
     return updateContext(context, filtered)
 }
 
 const hasKeyValue = (key, value) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.objects[0].props && t.objects[0].props[key] === value)
+    const filtered = context.traversers.filter(t=>t.current.props && t.current.props[key] === value)
     return updateContext(context, filtered)
 }
 
 const hasLabelKeyValue = (label, key, value) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.objects[0].label && t.objects[0].label === label && t.objects[0].props && t.objects[0].props[key] === value)
+    const filtered = context.traversers.filter(t=>t.current.label && t.current.label === label && t.current.props && t.current.props[key] === value)
     return updateContext(context, filtered)
     
 }

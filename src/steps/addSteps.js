@@ -25,11 +25,18 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     delete args.in
 
     const context = getCurrentContext(args)
-    const vs = context.traversers.filter(t=>isV(t.objects[0]))
-    const ft = {out: [undefined], in: [undefined], ...myArgs}
-
+    const vs = context.traversers.filter(t=>isV(t.current))
+ 
     const travIsIn  = !(myArgs.in)
     const travIsOut  = !(myArgs.out)
+
+    if (myArgs.in)
+        myArgs.in = resolveTraverserArg(myArgs.in, context)
+
+    if (myArgs.out)
+        myArgs.out = resolveTraverserArg(myArgs.out, context)
+
+    const ft = {out: [undefined], in: [undefined], ...myArgs}
 
     const idOrVal = (x) => x.id ? x.id : x
 
@@ -41,8 +48,8 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
                 const e = {
                     label,
                     id: uuidv4(),
-                    in: travIsIn ? t.objects[0].id : idOrVal(in_),
-                    out: travIsOut ? t.objects[0].id : idOrVal(out),
+                    in: travIsIn ? t.current.id : idOrVal(in_),
+                    out: travIsOut ? t.current.id : idOrVal(out),
                     props
                 }
                 context.graph.edges.push(e)    
@@ -57,7 +64,6 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
 
 // TODO: to and from steps can modulate other steps, so should be moved from the 'add' steps module, into their own
 export const to = (to) => (getCurrentContext) => (args)=> {
-    to = resolveTraverserArg(to,args)
     to = ensureIsArray(to) 
     return getCurrentContext({out: to, ...args}) 
 }
@@ -77,10 +83,11 @@ function ensureIsArray(arg) {
 }
 
 function resolveTraverserArg(arg, context) {
-    if (! (arg.subQuery && {}.toString.call(arg.subQuery) === '[object Function]'))
+    const f = Array.isArray(arg) ? arg[0] : arg
+    if (! (f.subQuery && {}.toString.call(f.subQuery) === '[object Function]'))
         return arg
-    if (arg.subQuery)
-        return arg.subQuery(context)   
+    if (f.subQuery)
+        return f.subQuery(context)   
 }
 
 

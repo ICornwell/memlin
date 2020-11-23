@@ -11,7 +11,6 @@ export function G() {
     // run the query with the graph and a new, empty traversal list
     g.execute = (graph) => { 
         g.context.graph = graph
-        g.context.traversers = [ {lables: [], objects: [] }]
         return g.query(g.context)
     }
 
@@ -20,7 +19,7 @@ export function G() {
         // based on a copy of the head of the parent query
         g.context.graph = context.graph
         g.context.traversers = [ ...context.traversers ]
-        return g.query().traversers
+        return g.query().traversers.map(t=>t.objects[0])
     }
 
     g.query =  () =>GT(g.context.graph)
