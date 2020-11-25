@@ -51,3 +51,31 @@ test('as step labels traversers - double label', () => {
     expect(r.traversers[0].labels.length).toBe(1)
     expect(r.traversers[0].labels[0]).toStrictEqual(['a','b'])
 })
+
+test('select step labels traversers - single label', () => {
+    const g = testGraph
+
+    const q = G().V().hasLabel('person').as('a').out('created').select('a')
+
+    const r = q.execute(g)
+
+    expect(r.traversers[0].labels.length).toBe(3)
+    expect(r.traversers[0].current.props.name).toStrictEqual('marko')
+})
+
+test('select step labels traversers - double label', () => {
+    const g = testGraph
+
+    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a','b')
+
+    const r = q.execute(g)
+
+    expect(r.traversers[0].labels.length).toBe(3)
+    const ft = r.traversers[0].current
+    expect(Array.isArray(ft)).toBeTruthy()
+    expect(ft[0].a).toBeTruthy()
+    expect(ft[0].a.props.name).toBe('marko')
+    expect(ft[1].b).toBeTruthy()
+    expect(ft[1].b.props.name).toBe('lop')
+    
+})
