@@ -45,4 +45,19 @@ export function isE(el) {
 }
 
 
+export function ensureIsArray(arg) {
+    if (!Array.isArray(arg))
+        arg=[arg]
+
+    return arg
+}
+
+export function resolveTraverserArg(arg, context, copyTraversers) {
+    const f = Array.isArray(arg) ? arg[0] : arg
+    if (! (f.subQuery && {}.toString.call(f.subQuery) === '[object Function]'))
+        return arg
+    if (f.subQuery)
+        return f.subQuery(context, copyTraversers)   
+}
+
 

@@ -79,3 +79,29 @@ test('select step labels traversers - double label', () => {
     expect(ft[1].b.props.name).toBe('lop')
     
 })
+
+test('select step labels traversers - with by', () => {
+    const g = testGraph
+
+    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a').by('name')
+
+    const r = q.execute(g)
+
+    expect(r.traversers[0].labels.length).toBe(3)
+    expect(r.traversers[0].current).toBe('marko')
+
+    
+})
+
+test('select step labels traversers - with double by', () => {
+    const g = testGraph
+
+    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a','b').by('name').by('lang')
+
+    const r = q.execute(g)
+
+    expect(r.traversers[0].labels.length).toBe(3)
+    expect(r.traversers[0].current).toStrictEqual([{"a": "marko"}, {"b": "java"}])
+
+    
+})

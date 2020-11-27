@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
-import {updateTraverser, updateContext, isV} from '../traverser'
+import {updateTraverser, updateContext,
+     isV, ensureIsArray, resolveTraverserArg} from '../traverser'
 
 
 export const addV = (label, props) => (getCurrentContext) => (args) => { 
@@ -72,22 +73,4 @@ export const from = (from) => (getCurrentContext) => (args)=> {
     from = ensureIsArray(from) 
     return getCurrentContext({in: from, ...args}) 
 }
-
-
-// TODO: these functions should be re-usable, so should be moved to traverser.js
-function ensureIsArray(arg) {
-    if (!Array.isArray(arg))
-        arg=[arg]
-
-    return arg
-}
-
-function resolveTraverserArg(arg, context, copyTraversers) {
-    const f = Array.isArray(arg) ? arg[0] : arg
-    if (! (f.subQuery && {}.toString.call(f.subQuery) === '[object Function]'))
-        return arg
-    if (f.subQuery)
-        return f.subQuery(context, copyTraversers)   
-}
-
 

@@ -3,7 +3,7 @@ import {addV, addE, to, from} from './steps/addSteps'
 import {V, E} from './steps/graphSteps'
 import {has, hasLabel, hasKey} from './steps/hasSteps'
 import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertexSteps'
-import {as, select} from './steps/asSelectSteps'
+import {as, select, by} from './steps/asSelectSteps'
 
 export function G() {
 
@@ -51,6 +51,8 @@ export function G() {
 
     g.as = (...labels) => { g.query = as(...labels)(g.query); return g }
     g.select = (...labels) => { g.query = select(...labels)(g.query); return g }
+    g.by = (byArgs) => { g.query = by(byArgs)(g.query); return g }
+    
     return g }
 
 
