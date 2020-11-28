@@ -1,4 +1,4 @@
-import { G } from '../query'
+import { g } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -22,61 +22,61 @@ const testGraph = {
 
 
 test('has Label Key Value', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().has('software', 'lang', 'java')
+    const q = g().V().has('software', 'lang', 'java')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
 })
 
 test('hasLabel', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('person')
+    const q = g().V().hasLabel('person')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(4)
 })
 
 test('hasLabel (multiple', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('hat', 'boat', 'software')
+    const q = g().V().hasLabel('hat', 'boat', 'software')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
 })
 
 test('has Key', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().has('name')
+    const q = g().V().has('name')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(6)
 })
 
 test('hasKey', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasKey('name')
+    const q = g().V().hasKey('name')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(6)
 })
 
 test('has KeyValue', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().has('name', 'marko')
+    const q = g().V().has('name', 'marko')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(1)
 })

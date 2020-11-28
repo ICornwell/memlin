@@ -1,4 +1,4 @@
-import { G } from '../query'
+import { g } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -22,33 +22,33 @@ const testGraph = {
 
 
 test('out', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().out('created')
+    const q = g().V().out('created')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(4)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('out (by id)', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V('1234-abcd-xyz0').out('knows')
+    const q = g().V('1234-abcd-xyz0').out('knows')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('in', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().in_('knows')
+    const q = g().V().in_('knows')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
@@ -57,44 +57,44 @@ test('in', () => {
 
 
 test('both', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V('1234-abcd-xyz3').both()
+    const q = g().V('1234-abcd-xyz3').both()
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(3)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(0) // no edges!
 })
 
 test('outE', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().outE('created')
+    const q = g().V().outE('created')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(4)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(4) // all edges!
 })
 
 test('outE (by id)', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V('1234-abcd-xyz0').outE('knows')
+    const q = g().V('1234-abcd-xyz0').outE('knows')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(2) // all edges!
 })
 
 test('inE', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().inE('knows')
+    const q = g().V().inE('knows')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(2) // all edges!
@@ -103,33 +103,33 @@ test('inE', () => {
 
 
 test('bothE', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V('1234-abcd-xyz3').bothE()
+    const q = g().V('1234-abcd-xyz3').bothE()
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(3)
     expect(r.traversers.filter(t=>t.current.out).length).toBe(3) // all edges!
 })
 
 test('outV (by id)', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().E('5678-abcd-xyz1').outV()
+    const q = g().E('5678-abcd-xyz1').outV()
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(1)
     expect(r.traversers[0].current.id).toBe('1234-abcd-xyz5')
 })
 
 test('inV', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().E('5678-abcd-xyz1').inV('knows')
+    const q = g().E('5678-abcd-xyz1').inV('knows')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(1)
     expect(r.traversers[0].current.id).toBe('1234-abcd-xyz2')
@@ -138,11 +138,11 @@ test('inV', () => {
 
 
 test('bothV', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().E('5678-abcd-xyz1').bothV()
+    const q = g().E('5678-abcd-xyz1').bothV()
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers.length).toBe(2)
     const ids = r.traversers.map(t=>t.current.id)

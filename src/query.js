@@ -5,55 +5,63 @@ import {has, hasLabel, hasKey} from './steps/hasSteps'
 import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertexSteps'
 import {as, select, by} from './steps/asSelectSteps'
 
-export function G() {
+export function g() {
 
-    const g=({ context: { graph: newGraph} })
+    const query=({ context: { graph: newGraph} })
 
     // run the query with the graph and a new, empty traversal list
-    g.execute = (graph) => { 
-        g.context.graph = graph
-        return g.query(g.context)
+    query.executeRawOut = (graph) => { 
+        query.context.graph = graph
+        return query.query(query.context)
     }
 
-    g.subQuery = (context, copyTraversers) => {
+    query.execute = (graph) => {
+        query.context.graph = graph
+        const raw = query.query(query.context)
+        const out = raw.traversers.map(t=>t.current)
+
+        return out
+    }
+
+    query.subQuery = (context, copyTraversers) => {
         // run the subquery for the same graph, but create a new traversal list
         // based on a copy of the head of the parent query
-        g.context.graph = context.graph
+        query.context.graph = context.graph
         if (copyTraversers)
-            g.context.traversers = [ ...context.traversers ]
-        return g.query().traversers.map(t=>t.objects[0])
+            query.context.traversers = [ ...context.traversers ]
+        return query.query().traversers.map(t=>t.objects[0])
     }
 
-    g.query =  () =>GT(g.context.graph)
+    query.query =  () =>GT(query.context.graph)
 
     // boilder-plate addition of all the steps to create the fluent chaining methods
-    g.addV = (label, props) => { g.query = addV(label,props)(g.query); return g }
-    g.addE = (label, props) => { g.query = addE(label,props)(g.query); return g }
-    g.to = (vertex) => { g.query = to(vertex)(g.query); return g }
-    g.from = (vertex) => { g.query = from(vertex)(g.query); return g }
+    query.addV = (label, props) => { query.query = addV(label,props)(query.query); return query }
+    query.addE = (label, props) => { query.query = addE(label,props)(query.query); return query }
+    query.to = (vertex) => { query.query = to(vertex)(query.query); return query }
+    query.from = (vertex) => { query.query = from(vertex)(query.query); return query }
 
-    g.V = (id) => { g.query = V(id)(g.query); return g }
-    g.E = (id) => { g.query = E(id)(g.query); return g }
+    query.V = (id) => { query.query = V(id)(query.query); return query }
+    query.E = (id) => { query.query = E(id)(query.query); return query }
 
-    g.has = (...hasArgs) => { g.query = has(...hasArgs)(g.query); return g }
-    g.hasLabel = (...hasArgs) => { g.query = hasLabel(...hasArgs)(g.query); return g }
-    g.hasKey = (...hasArgs) => { g.query = hasKey(...hasArgs)(g.query); return g }
+    query.has = (...hasArgs) => { query.query = has(...hasArgs)(query.query); return query }
+    query.hasLabel = (...hasArgs) => { query.query = hasLabel(...hasArgs)(query.query); return query }
+    query.hasKey = (...hasArgs) => { query.query = hasKey(...hasArgs)(query.query); return query }
 
-    g.out = (...labels) => { g.query = out(...labels)(g.query); return g }
-    g.in_ = (...labels) => { g.query = in_(...labels)(g.query); return g }
-    g.both = (...labels) => { g.query = both(...labels)(g.query); return g }
-    g.outE = (...labels) => { g.query = outE(...labels)(g.query); return g }
-    g.inE = (...labels) => { g.query = inE(...labels)(g.query); return g }
-    g.bothE = (...labels) => { g.query = bothE(...labels)(g.query); return g }
-    g.outV = () => { g.query = outV()(g.query); return g }
-    g.inV = () => { g.query = inV()(g.query); return g }
-    g.bothV = () => { g.query = bothV()(g.query); return g }
+    query.out = (...labels) => { query.query = out(...labels)(query.query); return query }
+    query.in_ = (...labels) => { query.query = in_(...labels)(query.query); return query }
+    query.both = (...labels) => { query.query = both(...labels)(query.query); return query }
+    query.outE = (...labels) => { query.query = outE(...labels)(query.query); return query }
+    query.inE = (...labels) => { query.query = inE(...labels)(query.query); return query }
+    query.bothE = (...labels) => { query.query = bothE(...labels)(query.query); return query }
+    query.outV = () => { query.query = outV()(query.query); return query }
+    query.inV = () => { query.query = inV()(query.query); return query }
+    query.bothV = () => { query.query = bothV()(query.query); return query }
 
-    g.as = (...labels) => { g.query = as(...labels)(g.query); return g }
-    g.select = (...labels) => { g.query = select(...labels)(g.query); return g }
-    g.by = (byArgs) => { g.query = by(byArgs)(g.query); return g }
+    query.as = (...labels) => { query.query = as(...labels)(query.query); return query }
+    query.select = (...labels) => { query.query = select(...labels)(query.query); return query }
+    query.by = (byArgs) => { query.query = by(byArgs)(query.query); return query }
     
-    return g }
+    return query }
 
 
 

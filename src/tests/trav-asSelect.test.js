@@ -1,4 +1,4 @@
-import { G } from '../query'
+import { g } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -20,55 +20,55 @@ const testGraph = {
     ]
 }
 test('no as step / lables', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V()
+    const q = g().V()
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers[0].labels.length).toBe(1)
     expect(r.traversers[0].labels[0]).toStrictEqual([])
 })
 
 test('as step labels traversers - single label', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().as('a')
+    const q = g().V().as('a')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers[0].labels.length).toBe(1)
     expect(r.traversers[0].labels[0]).toStrictEqual(['a'])
 })
 
 test('as step labels traversers - double label', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().as('a','b')
+    const q = g().V().as('a','b')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers[0].labels.length).toBe(1)
     expect(r.traversers[0].labels[0]).toStrictEqual(['a','b'])
 })
 
 test('select step labels traversers - single label', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('person').as('a').out('created').select('a')
+    const q = g().V().hasLabel('person').as('a').out('created').select('a')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers[0].labels.length).toBe(3)
     expect(r.traversers[0].current.props.name).toStrictEqual('marko')
 })
 
 test('select step labels traversers - double label', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a','b')
+    const q = g().V().hasLabel('person').as('a').out('created').as('b').select('a','b')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.traversers[0].labels.length).toBe(3)
     const ft = r.traversers[0].current
@@ -81,27 +81,27 @@ test('select step labels traversers - double label', () => {
 })
 
 test('select step labels traversers - with by', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a').by('name')
+    const q = g().V().hasLabel('person').as('a').out('created').as('b').select('a').by('name')
 
-    const r = q.execute(g)
+    const r = q.execute(graph)
 
-    expect(r.traversers[0].labels.length).toBe(3)
-    expect(r.traversers[0].current).toBe('marko')
+    expect(r.length).toBe(4)
+    expect(r).toStrictEqual(['marko','peter','josh','josh'])
 
     
 })
 
 test('select step labels traversers - with double by', () => {
-    const g = testGraph
+    const graph = testGraph
 
-    const q = G().V().hasLabel('person').as('a').out('created').as('b').select('a','b').by('name').by('lang')
+    const q = g().V().hasLabel('person').as('a').out('created').as('b').select('a','b').by('name').by('lang')
 
-    const r = q.execute(g)
+    const r = q.execute(graph)
 
-    expect(r.traversers[0].labels.length).toBe(3)
-    expect(r.traversers[0].current).toStrictEqual([{"a": "marko"}, {"b": "java"}])
+    expect(r.length).toBe(4)
+    expect(r[0]).toStrictEqual([{"a": "marko"}, {"b": "java"}])
 
     
 })

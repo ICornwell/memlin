@@ -1,4 +1,4 @@
-import { G } from '../query'
+import { g } from '../query'
 
 const testGraph = {
     vertices: [
@@ -17,13 +17,12 @@ const testGraph = {
     ]
 }
 
-
 test('addE to', () => {
-    const g = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
-    const q = G().V('1234-abcd-xyz0').addE('knows').to('1234-abcd-xyz1')
+    const q = g().V('1234-abcd-xyz0').addE('knows').to('1234-abcd-xyz1')
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.graph.edges.length).toBe(5)
     expect(r.traversers[0].current.label).toBe('knows')
@@ -32,13 +31,12 @@ test('addE to', () => {
 })
 
 test('addE to subquery', () => {
-    const g = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
-    const q = G().V('1234-abcd-xyz0').addE('supports').to(G().V().hasLabel('software'))
+    const q = g().V('1234-abcd-xyz0').addE('supports').to(g().V().hasLabel('software'))
 
-    const r = q.execute(g)
+    const r = q.executeRawOut(graph)
 
     expect(r.graph.edges.length).toBe(6)
-
 })
 
