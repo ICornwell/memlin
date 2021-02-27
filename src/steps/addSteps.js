@@ -27,6 +27,11 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
 
     const context = getCurrentContext(args)
     const vs = context.traversers.filter(t=>isV(t.current))
+
+    // if there are no veritces to add an edge to
+    // create a dummy and hope(!) we have a 'to' and a 'from' to work with
+    if (vs.length === 0)
+        vs.push({labels: [], objects: [] })
  
     const travIsIn  = !(myArgs.in)
     const travIsOut  = !(myArgs.out)

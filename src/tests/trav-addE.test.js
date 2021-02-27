@@ -40,3 +40,13 @@ test('addE to subquery', () => {
     expect(r.graph.edges.length).toBe(6)
 })
 
+test('addE to subquery + from subquery', () => {
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+    const q = g().addE('supports').from(g().V('1234-abcd-xyz0')).to(g().V().hasLabel('software'))
+
+    const r = q.executeRawOut(graph)
+
+    expect(r.graph.edges.length).toBe(6)
+})
+
