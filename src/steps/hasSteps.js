@@ -1,5 +1,10 @@
 import {updateContext} from '../traverser'
 
+//TODO: All these filters are implemented as full steps except the update the current traverers,
+//  rather than extending the paths. They should be modulators (like to and from) so the preceding
+//  step being filtered can use them more optimally - this will become important when 'and' and 'or'
+//  steps are added
+
 export const has = (...hasArgs) => { 
     if (hasArgs.length===1)
         return hasKey(hasArgs[0])

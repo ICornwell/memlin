@@ -1,10 +1,10 @@
 
 export const newGraph = { edges: [], vertices: []}
 
-export const G = (g) =>  {
+export const G = (g, traversers) =>  {
     const context = { graph: g ? g : newGraph }
     const emptyInitialTraverser = {labels: [], objects: [] }
-    const initialisedTraversers = [updateTraverser(emptyInitialTraverser)] 
+    const initialisedTraversers = traversers ? traversers : [updateTraverser(emptyInitialTraverser)] 
     return updateContext(context, initialisedTraversers)
 } // G is a function that gets a new traverser
 
@@ -53,6 +53,8 @@ export function ensureIsArray(arg) {
 }
 
 export function resolveTraverserArg(arg, context, copyTraversers) {
+    // if we just have an arg, return it, if the arg is a subquery, execute it
+    //TODO: why only the first arg?
     const f = Array.isArray(arg) ? arg[0] : arg
     if (! (f.subQuery && {}.toString.call(f.subQuery) === '[object Function]'))
         return arg

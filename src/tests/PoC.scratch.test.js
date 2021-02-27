@@ -49,7 +49,7 @@ test('scratch', () => {
     const q = (to('a')(addE('e')(addV('b')(addV('a')(G)))))
 
     // query.js allows this to be re-written as fluent Gremlin like:
-    // G().addV('v1').addV('v2').addE('e1').to('v1')
+    // g().addV('v1').addV('v2').addE('e1').to('v1')
 
     const r=q()
 

@@ -4,6 +4,8 @@ import {V, E} from './steps/graphSteps'
 import {has, hasLabel, hasKey} from './steps/hasSteps'
 import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertexSteps'
 import {as, select, by} from './steps/asSelectSteps'
+import {sideEffect} from './steps/sideEffectStep'
+import {union} from './steps/unionStep'
 
 export function g() {
 
@@ -26,13 +28,19 @@ export function g() {
     query.subQuery = (context, copyTraversers) => {
         // run the subquery for the same graph, but create a new traversal list
         // based on a copy of the head of the parent query
+
+        // copy traversers allows the subquery to execute using the traversers
+        // from the outer context
         query.context.graph = context.graph
         if (copyTraversers)
             query.context.traversers = [ ...context.traversers ]
-        return query.query().traversers.map(t=>t.objects[0])
+        return query.query().traversers.map(t=>t.current)
     }
 
-    query.query =  () =>GT(query.context.graph)
+    // note: query.context.traversers will be undefined unless the (above) subquery
+    // was told to copy them from an out query
+
+    query.query =  () =>GT(query.context.graph, query.context.traversers)
 
     // boilder-plate addition of all the steps to create the fluent chaining methods
     query.addV = (label, props) => { query.query = addV(label,props)(query.query); return query }
@@ -60,6 +68,9 @@ export function g() {
     query.as = (...labels) => { query.query = as(...labels)(query.query); return query }
     query.select = (...labels) => { query.query = select(...labels)(query.query); return query }
     query.by = (byArgs) => { query.query = by(byArgs)(query.query); return query }
+
+    query.sideEffect = (steps) => { query.query = sideEffect(steps)(query.query); return query }
+    query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); return query }
     
     return query }
 
