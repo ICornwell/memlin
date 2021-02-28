@@ -13,13 +13,11 @@ export function g(gToClone) {
 
     // run the query with the graph and a new, empty traversal list
     query.executeRawOut = (graph) => { 
-        query.context.graph = graph
-        return query.query(query.context)
+        return query.query( { initGraph:graph }) 
     }
 
     query.execute = (graph) => {
-        query.context.graph = graph
-        const raw = query.query(query.context)
+        const raw = query.query( { initGraph:graph }) 
         const out = raw.traversers.map(t=>t.current)
 
         return out
@@ -29,22 +27,25 @@ export function g(gToClone) {
         // run the subquery for the same graph, but create a new traversal list
         // based on a copy of the head of the parent query
 
-        // copy traversers allows the subquery to execute using the traversers
+        // 'copyTraversers' allows the subquery to execute using the traversers
         // from the outer context
-        query.context.graph = context.graph
-        if (copyTraversers)
-            query.context.traversers = [ ...context.traversers ]
-        return query.query().traversers.map(t=>t.current)
+        
+        const args = {
+            initGraph:context.graph,
+            initTraversers:  copyTraversers? [ ...context.traversers ] : null
+        }
+        
+        return query.query( args)
+            .traversers.map(t=>t.current)
     }
 
     // note: query.context.traversers will be undefined unless the (above) subquery
     // was told to copy them from an out query
     if (!gToClone)
-        query.query =  () =>GT(query.context.graph, query.context.traversers)
-    else {
+        query.query =  (args) =>GT(args)
+    else 
         query.query = gToClone.query
-        query.context = gToClone.context
-    }
+    
 
     // boilder-plate addition of all the steps to create the fluent chaining methods
     query.addV = (label, props) => { query.query = addV(label,props)(query.query); return query }

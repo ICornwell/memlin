@@ -1,12 +1,12 @@
 
 export const newGraph = { edges: [], vertices: []}
 
-export const G = (g, traversers) =>  {
-    const context = { graph: g ? g : newGraph }
+export const G = (args) =>  {
+    const context = { graph: args.initGraph ? args.initGraph : newGraph } 
     const emptyInitialTraverser = {labels: [], objects: [] }
-    const initialisedTraversers = traversers ? traversers : [updateTraverser(emptyInitialTraverser)] 
+    const initialisedTraversers = args.initTraversers ? args.initTraversers : [updateTraverser(emptyInitialTraverser)] 
     return updateContext(context, initialisedTraversers)
-} // G is a function that gets a new traverser
+} // G is a function that initialises the graph and gets an existing or new traverser
 
 // the following functions take some local args and returns a function thats the current
 // traverser and returns another function that accepts modulator args (or not), and 
