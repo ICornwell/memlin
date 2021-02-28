@@ -37,10 +37,10 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     const travIsOut  = !(myArgs.out)
 
     if (myArgs.in)
-        myArgs.in = resolveTraverserArg(myArgs.in, context, false)
+        myArgs.in = resolveTraverserArg(myArgs.in, context, true)
 
     if (myArgs.out)
-        myArgs.out = resolveTraverserArg(myArgs.out, context, false)
+        myArgs.out = resolveTraverserArg(myArgs.out, context, true)
 
     const ft = {out: [undefined], in: [undefined], ...myArgs}
 
