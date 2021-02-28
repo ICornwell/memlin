@@ -11,12 +11,12 @@ const testGraph = {
         { label: 'software', id: '1234-abcd-xyz5', props: { name: 'lop', lang: 'java' } }
     ],
     edges: [
-        { label: 'created', id: '5678-abcd-xyz0', in: '1234-abcd-xyz0', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz1', in: '1234-abcd-xyz2', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz2', in: '1234-abcd-xyz3', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz3', in: '1234-abcd-xyz3', out: '1234-abcd-xyz4' },
-        { label: 'knows', id: '5678-abcd-xyz4', in: '1234-abcd-xyz0', out: '1234-abcd-xyz1' },
-        { label: 'knows', id: '5678-abcd-xyz5', in: '1234-abcd-xyz0', out: '1234-abcd-xyz3' }
+        { label: 'created', id: '5678-abcd-xyz0', out: '1234-abcd-xyz0', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz1', out: '1234-abcd-xyz2', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz2', out: '1234-abcd-xyz3', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz3', out: '1234-abcd-xyz3', in: '1234-abcd-xyz4' },
+        { label: 'knows', id: '5678-abcd-xyz4', out: '1234-abcd-xyz0', in: '1234-abcd-xyz1' },
+        { label: 'knows', id: '5678-abcd-xyz5', out: '1234-abcd-xyz0', in: '1234-abcd-xyz3' }
     ]
 }
 
@@ -113,10 +113,10 @@ test('bothE', () => {
     expect(r.traversers.filter(t=>t.current.out).length).toBe(3) // all edges!
 })
 
-test('outV (by id)', () => {
+test('inV (by id)', () => {
     const graph = testGraph
 
-    const q = g().E('5678-abcd-xyz1').outV()
+    const q = g().E('5678-abcd-xyz1').inV()
 
     const r = q.executeRawOut(graph)
 
@@ -124,10 +124,10 @@ test('outV (by id)', () => {
     expect(r.traversers[0].current.id).toBe('1234-abcd-xyz5')
 })
 
-test('inV', () => {
+test('outV', () => {
     const graph = testGraph
 
-    const q = g().E('5678-abcd-xyz1').inV('knows')
+    const q = g().E('5678-abcd-xyz1').outV('knows')
 
     const r = q.executeRawOut(graph)
 

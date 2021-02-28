@@ -8,8 +8,8 @@ export const out = (...labels) => (getCurrentContext) => (args) => {
     const context = getCurrentContext(args)
 
     const next = context.traversers.filter(t=>isV(t.current))
-                .flatMap(t => context.graph.edges.filter(e => e.in === t.current.id && labelMatch(labels,e)).map(e => ({t,e}))  )  // find outbound edges
-                .flatMap(pair => context.graph.vertices.filter(v => v.id === pair.e.out)
+                .flatMap(t => context.graph.edges.filter(e => e.out === t.current.id && labelMatch(labels,e)).map(e => ({t,e}))  )  // find outbound edges
+                .flatMap(pair => context.graph.vertices.filter(v => v.id === pair.e.in)
                     .map(v=>(updateTraverser(pair.t,v,args))
                 )) // find 'to' vertex  
     return updateContext(context, next)
@@ -20,8 +20,8 @@ export const in_ = (...labels) => (getCurrentContext) => (args) => {
     const context = getCurrentContext(args)
 
     const next = context.traversers.filter(t=>isV(t.current))
-                .flatMap(t => context.graph.edges.filter(e => e.out === t.current.id && labelMatch(labels,e)).map(e=> ({t,e}))) // find inbound edges
-                .flatMap(pair =>context.graph.vertices.filter(v => v.id === pair.e.in) // find 'to' vertex
+                .flatMap(t => context.graph.edges.filter(e => e.in === t.current.id && labelMatch(labels,e)).map(e=> ({t,e}))) // find inbound edges
+                .flatMap(pair =>context.graph.vertices.filter(v => v.id === pair.e.out) // find 'to' vertex
                     .map(v=>(updateTraverser(pair.t,v,args))
                 ))
     return updateContext(context, next)
@@ -50,7 +50,7 @@ export const outE = (...labels) => (getCurrentContext) => (args) => {
     const context = getCurrentContext(args)
 
     const next = context.traversers.filter(t=>isV(t.current))
-                .flatMap(t => context.graph.edges.filter(e => e.in === t.current.id && labelMatch(labels,e))
+                .flatMap(t => context.graph.edges.filter(e => e.out === t.current.id && labelMatch(labels,e))
                     .map(e=> (updateTraverser(t,e,args)))) // find outbound edges
                 
     return updateContext(context, next)
@@ -60,7 +60,7 @@ export const inE = (...labels) => (getCurrentContext) => (args) => {
     const context = getCurrentContext(args)
 
     const next = context.traversers.filter(t=>isV(t.current))
-                .flatMap(t => context.graph.edges.filter(e => e.out === t.current.id && labelMatch(labels,e)) // find inbound edges
+                .flatMap(t => context.graph.edges.filter(e => e.in === t.current.id && labelMatch(labels,e)) // find inbound edges
                     .map(e=> (updateTraverser(t,e,args)))) // find outbound edges
     return updateContext(context, next)
 }

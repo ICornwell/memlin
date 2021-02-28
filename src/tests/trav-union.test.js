@@ -11,13 +11,13 @@ const testGraph = {
         { label: 'software', id: '1234-abcd-xyz5', props: { name: 'lop', lang: 'java' } }
     ],
     edges: [
-        { label: 'created', id: '5678-abcd-xyz0', in: '1234-abcd-xyz0', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz1', in: '1234-abcd-xyz2', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz2', in: '1234-abcd-xyz3', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz3', in: '1234-abcd-xyz3', out: '1234-abcd-xyz4' },
-        { label: 'knows', id: '5678-abcd-xyz4', in: '1234-abcd-xyz0', out: '1234-abcd-xyz1' },
-        { label: 'knows', id: '5678-abcd-xyz5', in: '1234-abcd-xyz0', out: '1234-abcd-xyz3' },
-        { label: 'knows', id: '5678-abcd-xyz6', in: '1234-abcd-xyz2', out: '1234-abcd-xyz0' }
+        { label: 'created', id: '5678-abcd-xyz0', out: '1234-abcd-xyz0', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz1', out: '1234-abcd-xyz2', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz2', out: '1234-abcd-xyz3', in: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz3', out: '1234-abcd-xyz3', in: '1234-abcd-xyz4' },
+        { label: 'knows', id: '5678-abcd-xyz4', out: '1234-abcd-xyz0', in: '1234-abcd-xyz1' },
+        { label: 'knows', id: '5678-abcd-xyz5', out: '1234-abcd-xyz0', in: '1234-abcd-xyz3' },
+        { label: 'knows', id: '5678-abcd-xyz6', out: '1234-abcd-xyz2', in: '1234-abcd-xyz0' }
     ]
 }
 
@@ -26,8 +26,8 @@ test('one V union to find 3', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
     const q = g().V('1234-abcd-xyz0').union(
-            g().outE('created').outV(),
-            g().outE('knows').outV() )
+            g().outE('created').inV(),
+            g().outE('knows').inV() )
 
 
     const r = q.executeRawOut(graph)
@@ -44,8 +44,8 @@ test('two Vs union to find 5', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
     const q = g().V().has('age', 29).union(
-            g().outE('created').outV(),
-            g().outE('knows').outV() )
+            g().outE('created').inV(),
+            g().outE('knows').inV() )
 
 
     const r = q.executeRawOut(graph)
