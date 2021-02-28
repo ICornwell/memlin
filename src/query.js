@@ -6,6 +6,7 @@ import {out, in_, both, outE, inE, bothE, outV, inV, bothV} from './steps/vertex
 import {as, select, by} from './steps/asSelectSteps'
 import {sideEffect} from './steps/sideEffectStep'
 import {union} from './steps/unionStep'
+import {dedup} from './steps/dedupStep'
 
 export function g(gToClone) {
 
@@ -76,6 +77,7 @@ export function g(gToClone) {
 
     query.sideEffect = (steps) => { query.query = sideEffect(steps)(query.query); return query }
     query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); return query }
+    query.dedup = () => { query.query = dedup()(query.query); return query }
     
     return query }
 
