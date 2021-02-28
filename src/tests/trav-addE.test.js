@@ -26,8 +26,8 @@ test('addE to', () => {
 
     expect(r.graph.edges.length).toBe(5)
     expect(r.traversers[0].current.label).toBe('knows')
-    expect(r.traversers[0].current.out).toBe('1234-abcd-xyz1')
-    expect(r.traversers[0].current.in).toBe('1234-abcd-xyz0')
+    expect(r.traversers[0].current.in).toBe('1234-abcd-xyz1')
+    expect(r.traversers[0].current.out).toBe('1234-abcd-xyz0')
 })
 
 test('addE to subquery', () => {

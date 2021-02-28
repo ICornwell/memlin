@@ -7,7 +7,7 @@ import {as, select, by} from './steps/asSelectSteps'
 import {sideEffect} from './steps/sideEffectStep'
 import {union} from './steps/unionStep'
 
-export function g() {
+export function g(gToClone) {
 
     const query=({ context: { graph: newGraph} })
 
@@ -39,8 +39,12 @@ export function g() {
 
     // note: query.context.traversers will be undefined unless the (above) subquery
     // was told to copy them from an out query
-
-    query.query =  () =>GT(query.context.graph, query.context.traversers)
+    if (!gToClone)
+        query.query =  () =>GT(query.context.graph, query.context.traversers)
+    else {
+        query.query = gToClone.query
+        query.context = gToClone.context
+    }
 
     // boilder-plate addition of all the steps to create the fluent chaining methods
     query.addV = (label, props) => { query.query = addV(label,props)(query.query); return query }

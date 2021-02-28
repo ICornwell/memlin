@@ -71,11 +71,11 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
 // TODO: to and from steps can modulate other steps, so should be moved from the 'add' steps module, into their own
 export const to = (to) => (getCurrentContext) => (args)=> {
     to = ensureIsArray(to) 
-    return getCurrentContext({out: to, ...args}) 
+    return getCurrentContext({in: to, ...args}) 
 }
 
 export const from = (from) => (getCurrentContext) => (args)=> {
     from = ensureIsArray(from) 
-    return getCurrentContext({in: from, ...args}) 
+    return getCurrentContext({out: from, ...args}) 
 }
 
