@@ -42,6 +42,8 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     if (myArgs.out)
         myArgs.out = resolveTraverserArg(myArgs.out, context, true)
 
+    resolveLabelArgs(myArgs, context)
+
     const ft = {out: [undefined], in: [undefined], ...myArgs}
 
     const idOrVal = (x) => x.id ? x.id : x
@@ -51,11 +53,15 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     const ts = vs.flatMap(t=>
         ft.out.flatMap(out=>
             ft.in.flatMap(in_=> {
+                const inId = travIsIn ? t.current.id : idOrVal(in_)
+                const outId = travIsOut ? t.current.id : idOrVal(out)
                 const e = {
                     label,
                     id: uuidv4(),
-                    in: travIsIn ? t.current.id : idOrVal(in_),
-                    out: travIsOut ? t.current.id : idOrVal(out),
+                    inV: inId,
+                    outV: outId,
+                    inVLabel: context.graph.vertices.find(v=>v.id === inId).label,
+                    outVLabel: context.graph.vertices.find(v=>v.id === outId).label,
                     props
                 }
                 context.graph.edges.push(e)    
@@ -77,5 +83,23 @@ export const to = (to) => (getCurrentContext) => (args)=> {
 export const from = (from) => (getCurrentContext) => (args)=> {
     from = ensureIsArray(from) 
     return getCurrentContext({out: from, ...args}) 
+}
+
+function resolveLabelArgs(inOutArgs, context) {
+    if (inOutArgs.in)
+        inOutArgs.in = inOutArgs.in.flatMap(i=>resolveLabelArgToId(i, context)) 
+
+    if (inOutArgs.out)
+        inOutArgs.out = inOutArgs.out.flatMap(i=>resolveLabelArgToId(i, context))
+}
+
+function resolveLabelArgToId(arg, context) {
+    const ids = context.traversers.map(t=> {
+            const idx = t.labels.findIndex(tl=>tl.includes(arg))
+            const id = idx >= 0 ? t.objects[idx].id : arg
+            return id
+        })
+
+    return ids
 }
 

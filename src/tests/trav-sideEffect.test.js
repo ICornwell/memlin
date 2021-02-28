@@ -5,8 +5,8 @@ import { newGraph } from '../query'
 test('add two edges via sideEffects', () => {
 
 
-    const q = g().addV('person', { name: 'bob', age: 37 }).as('a').addV('person', { name: 'jill'})
-        .sideEffect(g().addE('knows').to('a'))
+    const q = g().addV('cat', { name: 'spot', age: 2 }).as('a').addV('person', { name: 'bob'})
+        .sideEffect(g().addE('owns').to('a'))
         .sideEffect(g().addE('likes').to('a'))
 
     const r = q.executeRawOut()
