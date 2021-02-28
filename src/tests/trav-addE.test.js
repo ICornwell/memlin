@@ -10,10 +10,10 @@ const testGraph = {
         { label: 'software', id: '1234-abcd-xyz5', props: { name: 'lop', lang: 'java' } }
     ],
     edges: [
-        { label: 'created', id: '5678-abcd-xyz0', in: '1234-abcd-xyz0', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz1', in: '1234-abcd-xyz2', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz2', in: '1234-abcd-xyz3', out: '1234-abcd-xyz5' },
-        { label: 'created', id: '5678-abcd-xyz3', in: '1234-abcd-xyz3', out: '1234-abcd-xyz4' }
+        { label: 'created', id: '5678-abcd-xyz0', inV: '1234-abcd-xyz0', outV: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz1', inV: '1234-abcd-xyz2', outV: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz2', inV: '1234-abcd-xyz3', outV: '1234-abcd-xyz5' },
+        { label: 'created', id: '5678-abcd-xyz3', inV: '1234-abcd-xyz3', outV: '1234-abcd-xyz4' }
     ]
 }
 

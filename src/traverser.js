@@ -37,11 +37,11 @@ export function updateContext(context, newTraversers) {
 }
 
 export function isV(el) {
-    return el?.label && el?.id && !el.in
+    return el?.label && el?.id && !el.inV
 }
 
 export function isE(el) {
-    return el?.label && el?.id && el.in
+    return el?.label && el?.id && el.inV
 }
 
 
