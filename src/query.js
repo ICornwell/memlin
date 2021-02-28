@@ -9,7 +9,7 @@ import {union} from './steps/unionStep'
 
 export function g(gToClone) {
 
-    const query=({ context: { graph: newGraph} })
+    const query={} 
 
     // run the query with the graph and a new, empty traversal list
     query.executeRawOut = (graph) => { 
