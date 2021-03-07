@@ -8,7 +8,9 @@ export const addV = (label, props) => (getCurrentContext) => (args) => {
     const context = getCurrentContext(args)
 
     const ts = context.traversers.map(t=> {
-        const id = uuidv4()
+        const id = props?.id ? props.id : uuidv4()
+        if (props?.id)
+            delete props.id
         const v = {label, id, props}
         context.graph.vertices.push(v)
 
@@ -55,9 +57,12 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
             ft.in.flatMap(in_=> {
                 const inId = travIsIn ? t.current.id : idOrVal(in_)
                 const outId = travIsOut ? t.current.id : idOrVal(out)
+                const id = props?.id ? props.id : uuidv4()
+                if (props?.id)
+                    delete props.id
                 const e = {
                     label,
-                    id: uuidv4(),
+                    id: id,
                     inV: inId,
                     outV: outId,
                     inVLabel: context.graph.vertices.find(v=>v.id === inId).label,
