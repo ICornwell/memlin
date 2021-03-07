@@ -28,7 +28,9 @@ export const hasKey = (...keys) => (getCurrentContext) => (args) => {
 
 const hasKeyValue = (key, value) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.current.props && t.current.props[key] === value)
+    const filtered = key === 'id'
+        ? context.traversers.filter(t=>t.current.id && t.current.id === value)
+        : context.traversers.filter(t=>t.current.props && t.current.props[key] === value)
     return updateContext(context, filtered)
 }
 
