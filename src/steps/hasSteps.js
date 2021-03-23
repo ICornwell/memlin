@@ -14,16 +14,34 @@ export const has = (...hasArgs) => {
         return hasLabelKeyValue(hasArgs[0], hasArgs[1], hasArgs[2])
 }
 
+export const has_Text = (...hasArgs) => {
+    const inner = hasArgs? hasArgs.map(a=>`'${a}'`).join(', ') : ''
+    const steps = [`has(${inner})`]
+    return steps.join('.')
+}
+
 export const hasLabel = (...labels) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
     const filtered = context.traversers.filter(t=>t.current.label && labels.includes(t.current.label))
     return updateContext(context, filtered)
 }
 
+export const hasLabel_Text = (...hasArgs) => {
+    const inner = hasArgs? hasArgs.map(a=>`'${a}'`).join(', ') : ''
+    const steps = [`hasLabel(${inner})`]
+    return steps.join('.')
+}
+
 export const hasKey = (...keys) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
     const filtered = context.traversers.filter(t=>t.current.props && Object.keys(t.current).filter(k=>keys.includes(k)))
     return updateContext(context, filtered)
+}
+
+export const hasKey_Text = (...hasArgs) => {
+    const inner = hasArgs? hasArgs.map(a=>`'${a}'`).join(', ') : ''
+    const steps = [`hasKey(${inner})`]
+    return steps.join('.')
 }
 
 const hasKeyValue = (key, value) => (getCurrentContext) => (args) => { 

@@ -1,7 +1,5 @@
 import {updateContext, isV, isE, updateTraverser, resolveTraverserArg} from '../traverser'
 
-
-
 export const union = (stepsSet) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
 
@@ -17,7 +15,11 @@ export const union = (stepsSet) => (getCurrentContext) => (args) => {
     
         return ts
     })   
-    
     return updateContext(context, results)
-    
+}
+
+export const union_Text = (...uSteps) => {
+    const inner = uSteps? uSteps.map(s=>s.getText()).join(', ') : ''
+    const steps = [`sideEffect(${inner})`]
+    return steps.join('.')
 }

@@ -20,6 +20,13 @@ export const addV = (label, props) => (getCurrentContext) => (args) => {
     return updateContext(context, ts)
 }
 
+export const addV_Text = (label, props) => {
+    const steps = [`addV('${label}')`]
+    if (props)
+        Object.keys(props).forEach(p=>{ steps.push(`property('${p}', '${props[p]}')`)})
+    return steps.join('.')
+}
+
 export const addE = (label, props) => (getCurrentContext) => (args) => { 
     // map/side-effect step
     const myArgs = { ...args }
@@ -79,15 +86,34 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     return updateContext(context, ts)
 }
 
+export const addE_Text = (label, props) => {
+    const steps = [`addE('${label}')`]
+    if (props)
+        Object.keys(props).forEach(p=>{ steps.push(`property('${p}', '${props[p]}')`)})
+    return steps.join('.')
+}
+
 // TODO: to and from steps can modulate other steps, so should be moved from the 'add' steps module, into their own
 export const to = (to) => (getCurrentContext) => (args)=> {
     to = ensureIsArray(to) 
     return getCurrentContext({in: to, ...args}) 
 }
 
+export const to_Text = (to) => {
+    const t = (to.getText) ? to.getText() : `'${to}'`
+    const steps = [`to(${t})`]
+    return steps.join('.')
+}
+
 export const from = (from) => (getCurrentContext) => (args)=> {
     from = ensureIsArray(from) 
     return getCurrentContext({out: from, ...args}) 
+}
+
+export const from_Text = (from) => {
+    const f = (from.getText) ? from.getText() : `'${from}'`
+    const steps = [`from(${f})`]
+    return steps.join('.')
 }
 
 function resolveLabelArgs(inOutArgs, context) {

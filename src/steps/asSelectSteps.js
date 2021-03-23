@@ -4,6 +4,12 @@ export const as = (...labels) => (getCurrentContext) => (args) => {
     return getCurrentContext({...args, labels}) 
 }
 
+export const as_Text = (...labels) => {
+    const inner = labels? labels.map(l=>`'${l}'`).join(', ') : ''
+    const steps = [`as(${inner})`]
+    return steps.join('.')
+}
+
 export const select = (...labels) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext({...args}) 
     const ts = context.traversers.map(t=> {
@@ -19,8 +25,20 @@ export const select = (...labels) => (getCurrentContext) => (args) => {
     return updateContext(context, ts)
 }
 
-export const by = (by) => (getCurrentContext) => (args)=> {
+export const select_Text = (...labels) => {
+    const inner = labels? labels.map(l=>`'${l}'`).join(', ') : ''
+    const steps = [`select(${inner})`]
+    return steps.join('.')
+}
+
+export const by = (...by) => (getCurrentContext) => (args)=> {
     by = ensureIsArray(by) 
     const bys = args.by ? [...by, ...args.by] : by
     return getCurrentContext({...args, by: bys}) 
+}
+
+export const by_Text = (...by) => {
+    const inner = by? by.map(b=>`'${b}'`).join(', ') : ''
+    const steps = [`by(${inner})`]
+    return steps.join('.')
 }

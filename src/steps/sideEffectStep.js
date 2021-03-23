@@ -11,3 +11,8 @@ export const sideEffect = (steps) => (getCurrentContext) => (args) => {
     return context
     
 }
+
+export const sideEffect_Text = (seSteps) => {
+    const steps = [`sideEffect(${seSteps.getText()})`]
+    return steps.join('.')
+}

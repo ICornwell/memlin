@@ -12,6 +12,12 @@ export const V = (id) => (getCurrentContext) => (args) => {
     return updateContext(context, ts)
 }
 
+export const v_Text = (id) => {
+    const inner = id? `'${id}'` : ''
+    const steps = [`V(${inner})`]
+    return steps.join('.')
+}
+
 export const E = (id) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
         
@@ -24,4 +30,10 @@ export const E = (id) => (getCurrentContext) => (args) => {
     })
 
     return updateContext(context, ts)
+}
+
+export const e_Text = (id) => {
+    const inner = id? `'${id}'` : ''
+    const steps = [`E(${inner})`]
+    return steps.join('.')
 }
