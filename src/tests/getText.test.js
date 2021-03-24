@@ -62,3 +62,18 @@ test('sideEffect steps', () => {
     expect(r).toBe(`addV('cat').property('name', 'spot').property('age', '2').as('a').addV('person').property('name', 'bob').sideEffect(addE('owns').to('a')).sideEffect(addE('likes').to('a'))`)
 })
 
+test('union steps', () => {
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+    const q = g().V().has('age', 29).union(
+        g().outE('created').inV().hasLabel('person'),
+        g().outE('knows').inV().hasKey('1234') )
+    const r = q.getText()
+
+    expect(r).toBe(`V().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
+})
+
+
+
+
+

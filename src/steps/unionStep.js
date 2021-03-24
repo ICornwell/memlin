@@ -20,6 +20,6 @@ export const union = (stepsSet) => (getCurrentContext) => (args) => {
 
 export const union_Text = (...uSteps) => {
     const inner = uSteps? uSteps.map(s=>s.getText()).join(', ') : ''
-    const steps = [`sideEffect(${inner})`]
+    const steps = [`union(${inner})`]
     return steps.join('.')
 }
