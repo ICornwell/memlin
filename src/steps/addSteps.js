@@ -44,23 +44,27 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
  
     const travIsIn  = !(myArgs.in)
     const travIsOut  = !(myArgs.out)
+    const ts = vs.flatMap(t=> {
+        // if the 'to' or 'from' modulators have inner traversals, we should
+        // execute them for each traverser (important if there add adds or other side effect behaviours)
+        const tArgs = { ...myArgs }
+        if (tArgs.in)
+            tArgs.in = resolveTraverserArg(tArgs.in, context, false)
 
-    if (myArgs.in)
-        myArgs.in = resolveTraverserArg(myArgs.in, context, true)
+        if (tArgs.out)
+            tArgs.out = resolveTraverserArg(tArgs.out, context, false)
 
-    if (myArgs.out)
-        myArgs.out = resolveTraverserArg(myArgs.out, context, true)
+        // 'to' and 'from' might include labels, that need resolving into ids
+        resolveLabelArgs(tArgs, context)
 
-    resolveLabelArgs(myArgs, context)
+        const ft = {out: [undefined], in: [undefined], ...tArgs}
 
-    const ft = {out: [undefined], in: [undefined], ...myArgs}
+        const idOrVal = (x) => x.id ? x.id : x
 
-    const idOrVal = (x) => x.id ? x.id : x
-
-    // support multiple 'to's and 'froms' to create multiple edges
-    // and map from the original traverser
-    const ts = vs.flatMap(t=>
-        ft.out.flatMap(out=>
+        // support multiple 'to's and 'froms' to create multiple edges
+        // and map from the original traverser
+    
+        return ft.out.flatMap(out=>
             ft.in.flatMap(in_=> {
                 const inId = travIsIn ? t.current.id : idOrVal(in_)
                 const outId = travIsOut ? t.current.id : idOrVal(out)
@@ -81,7 +85,7 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
             }
             )
         )
-    )
+    })
 
     return updateContext(context, ts)
 }
@@ -117,11 +121,12 @@ export const from_Text = (from) => {
 }
 
 function resolveLabelArgs(inOutArgs, context) {
+    // only resolve if it is a lable/id, not if it is already an object
     if (inOutArgs.in)
-        inOutArgs.in = inOutArgs.in.flatMap(i=>resolveLabelArgToId(i, context)) 
+        inOutArgs.in = inOutArgs.in.flatMap(i=>i.id ? i : resolveLabelArgToId(i, context)) 
 
     if (inOutArgs.out)
-        inOutArgs.out = inOutArgs.out.flatMap(i=>resolveLabelArgToId(i, context))
+        inOutArgs.out = inOutArgs.out.flatMap(i=>i.id ? i : resolveLabelArgToId(i, context))
 }
 
 function resolveLabelArgToId(arg, context) {

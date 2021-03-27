@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime'
+
 import { G as GT, newGraph, updateTraverser } from './traverser'
 import { addV, addE, to, from } from './steps/addSteps'
 import { addV_Text, addE_Text, to_Text, from_Text } from './steps/addSteps'
@@ -15,6 +17,8 @@ import { union } from './steps/unionStep'
 import { union_Text } from './steps/unionStep'
 import { dedup } from './steps/dedupStep'
 import { dedup_Text } from './steps/dedupStep'
+import { coalesce } from './steps/coalesceStep'
+import { coalesce_Text } from './steps/coalesceStep'
 
 export function g(gToClone) {
 
@@ -88,6 +92,7 @@ export function g(gToClone) {
 
     query.sideEffect = (steps) => { query.query = sideEffect(steps)(query.query); queryString.push(sideEffect_Text(steps)); return query }
     query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); queryString.push(union_Text(...stepsSet)); return query }
+    query.coalesce = (...stepsSet) => { query.query = coalesce(stepsSet)(query.query); queryString.push(coalesce_Text(...stepsSet)); return query }
     query.dedup = () => { query.query = dedup()(query.query); queryString.push(dedup_Text()); return query }
 
     return query
