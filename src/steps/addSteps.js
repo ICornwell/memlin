@@ -34,7 +34,7 @@ export const addV_Text = (label, props) => {
                 if (typeof props[p] === 'object') {
                     const keyValsList = Object.keys(props[p]).map(k => 
                         `'${k}', '${sanitise(props[p][k])}'`).join (', ')
-                    steps.push(`property(list, '${p}', ${keyValsList})`)
+                    steps.push(`property(list, '${p}', 'list', ${keyValsList})`)
                 }
 
                 else
