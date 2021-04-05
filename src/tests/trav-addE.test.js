@@ -50,3 +50,4 @@ test('addE to subquery + from subquery', () => {
     expect(r.graph.edges.length).toBe(6)
 })
 
+

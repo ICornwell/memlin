@@ -31,8 +31,14 @@ export const addV_Text = (label, props) => {
     if (props)
         Object.keys(props).forEach(p=>{ 
             if (props[p])
-            
-                steps.push(`property('${p}', '${sanitise(props[p])}')`)
+                if (typeof props[p] === 'object') {
+                    const keyValsList = Object.keys(props[p]).map(k => 
+                        `'${k}', '${sanitise(props[p][k])}'`).join (', ')
+                    steps.push(`property(list, '${p}', ${keyValsList})`)
+                }
+
+                else
+                    steps.push(`property('${p}', '${sanitise(props[p])}')`)
         })
     return steps.join('.')
 }
