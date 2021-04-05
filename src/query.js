@@ -19,6 +19,7 @@ import { dedup } from './steps/dedupStep'
 import { dedup_Text } from './steps/dedupStep'
 import { coalesce } from './steps/coalesceStep'
 import { coalesce_Text } from './steps/coalesceStep'
+import { count, count_Text } from './steps/countStep'
 
 export function g(gToClone) {
 
@@ -38,6 +39,8 @@ export function g(gToClone) {
         return out
     }
     query.getText = () => queryString.join('.')
+
+    query.getTextArray = () => queryString
 
     query.subQuery = (context, copyTraversers) => {
         // run the subquery for the same graph, but create a new traversal list
@@ -94,6 +97,8 @@ export function g(gToClone) {
     query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); queryString.push(union_Text(...stepsSet)); return query }
     query.coalesce = (...stepsSet) => { query.query = coalesce(stepsSet)(query.query); queryString.push(coalesce_Text(...stepsSet)); return query }
     query.dedup = () => { query.query = dedup()(query.query); queryString.push(dedup_Text()); return query }
+
+    query.count = () => { query.query = count()(query.query); queryString.push(count_Text()); return query }
 
     return query
 }

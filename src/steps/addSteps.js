@@ -2,6 +2,12 @@ import { v4 as uuidv4 } from 'uuid'
 import {updateTraverser, updateContext,
      isV, ensureIsArray, resolveTraverserArg} from '../traverser'
 
+function sanitise(val) {
+    if (typeof val === 'string')
+        return val.replace(/[\\]/g, "\\\\'" ).replace(/[']/g, "\\'" )
+    else 
+        return val
+}
 
 export const addV = (label, props) => (getCurrentContext) => (args) => { 
     // map/side-effect step
@@ -23,7 +29,11 @@ export const addV = (label, props) => (getCurrentContext) => (args) => {
 export const addV_Text = (label, props) => {
     const steps = [`addV('${label}')`]
     if (props)
-        Object.keys(props).forEach(p=>{ steps.push(`property('${p}', '${props[p]}')`)})
+        Object.keys(props).forEach(p=>{ 
+            if (props[p])
+            
+                steps.push(`property('${p}', '${sanitise(props[p])}')`)
+        })
     return steps.join('.')
 }
 

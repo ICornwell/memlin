@@ -28,7 +28,7 @@ test('simple getText', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`V('1234-abcd-xyz0')`)
+    expect(r).toBe(`v('1234-abcd-xyz0')`)
 })
 
 test('simple getText addE to V with select, as', () => {
@@ -48,7 +48,7 @@ test('addE to V with to inner selection', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`addV('person').property('name', 'jim').addE('knows').to(V('1234'))`)
+    expect(r).toBe(`addV('person').property('name', 'jim').addE('knows').to(v('1234'))`)
 })
 
 test('sideEffect steps', () => {
@@ -70,7 +70,7 @@ test('union steps', () => {
         g().outE('knows').inV().hasKey('1234') )
     const r = q.getText()
 
-    expect(r).toBe(`V().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
+    expect(r).toBe(`v().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
 })
 
 
