@@ -7,7 +7,7 @@ export const count = () => (getCurrentContext) => (args) => {
 
     const newTraverser = {labels: [], objects: [] }
 
-    const results = [updateTraverser(newTraverser, {value: count}, args )]
+    const results = [updateTraverser(newTraverser, count, args )]
     
     return updateContext(context, results)
 }

@@ -76,8 +76,8 @@ test('has KeyValue', () => {
 
     const q = g().V().has('name', 'marko')
 
-    const r = q.executeRawOut(graph)
+    const r = q.execute(graph)
 
-    expect(r.traversers.length).toBe(1)
+    expect(r.length).toBe(1)
 })
 

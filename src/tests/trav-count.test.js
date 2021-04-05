@@ -29,7 +29,7 @@ test('count of 6 nodes', () => {
 
     const r = q.execute(graph)
 
-    expect(r[0].value).toBe(6)
+    expect(r[0]).toBe(6)
 })
 
 test('count of 3 edges', () => {
@@ -38,7 +38,7 @@ test('count of 3 edges', () => {
 
     const r = q.execute(graph)
 
-    expect(r[0].value).toBe(3)
+    expect(r[0]).toBe(3)
 })
 
 
