@@ -3,10 +3,11 @@ import {updateTraverser, updateContext,
      isV, ensureIsArray, resolveTraverserArg} from '../traverser'
 
 function sanitise(val) {
+    const isNumber = (typeof val === 'number')
     if (typeof val === 'string')
-        return val.replace(/[\\]/g, "\\\\'" ).replace(/[']/g, "\\'" )
+        return `'${val.replace(/[\\]/g, "\\\\'" ).replace(/[']/g, "\\'" )}'`
     else 
-        return val
+        return isNumber? val: `'${val}'`
 }
 
 export const addV = (label, props) => (getCurrentContext) => (args) => { 
@@ -27,18 +28,23 @@ export const addV = (label, props) => (getCurrentContext) => (args) => {
 }
 
 export const addV_Text = (label, props) => {
-    const steps = [`addV('${label}')`]
+    const nonObjProps = Object.keys(props)
+        .filter(p => typeof props[p] !== 'object' && (props[p] || typeof props[p] !== 'string'))
+        .map(p => `'${p}', ${sanitise(props[p])}`)
+        .join(', ')
+
+    const steps = [`addV('label', '${label}'${nonObjProps?',':''} ${nonObjProps})`]
     if (props)
         Object.keys(props).forEach(p=>{ 
             if (props[p])
                 if (typeof props[p] === 'object') {
                     const keyValsList = Object.keys(props[p]).map(k => 
-                        `'${k}', '${sanitise(props[p][k])}'`).join (', ')
+                        `'${k}', ${sanitise(props[p][k])}`).join (', ')
                     steps.push(`property(list, '${p}', 'list', ${keyValsList})`)
                 }
 
-                else
-                    steps.push(`property('${p}', '${sanitise(props[p])}')`)
+            //    else
+            //        steps.push(`property('${p}', '${sanitise(props[p])}')`)
         })
     return steps.join('.')
 }
@@ -54,8 +60,10 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
     const vs = context.traversers.filter(t=>isV(t.current))
 
     // if there are no veritces to add an edge to
-    // create a dummy and hope(!) we have a 'to' and a 'from' to work with
-    if (vs.length === 0)
+    // and we have a 'to' and a 'from' to work with
+    // create a dummy traverser to allow edges to be added
+    // NB: I don't think gremlin (at least on CosmosDB allows this)
+    if (myArgs.in && myArgs.out && vs.length === 0)
         vs.push({labels: [], objects: [] })
  
     const travIsIn  = !(myArgs.in)

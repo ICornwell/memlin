@@ -34,5 +34,5 @@ test('addV with props to text', () => {
 
     const r = q.getText()
 
-    expect(r).toBe("addV('person').property(list, 'metadata', 'list', 'key1', 'val1', 'key2', 'val2').property('name', 'bob').property('age', '27')")
+    expect(r).toBe("addV('label', 'person', 'name', 'bob', 'age', 27).property(list, 'metadata', 'list', 'key1', 'val1', 'key2', 'val2')")
 })

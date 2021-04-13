@@ -38,7 +38,7 @@ test('simple getText addE to V with select, as', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`addV('person').property('name', 'bob').as('a').addV('person').property('name', 'jim').addE('knows').to('a')`)
+    expect(r).toBe(`addV('label', 'person', 'name', 'bob').as('a').addV('label', 'person', 'name', 'jim').addE('knows').to('a')`)
 })
 
 test('addE to V with to inner selection', () => {
@@ -48,7 +48,7 @@ test('addE to V with to inner selection', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`addV('person').property('name', 'jim').addE('knows').to(v('1234'))`)
+    expect(r).toBe(`addV('label', 'person', 'name', 'jim').addE('knows').to(v('1234'))`)
 })
 
 test('sideEffect steps', () => {
@@ -59,7 +59,7 @@ test('sideEffect steps', () => {
         .sideEffect(g().addE('likes').to('a'))
     const r = q.getText()
 
-    expect(r).toBe(`addV('cat').property('name', 'spot').property('age', '2').as('a').addV('person').property('name', 'bob').sideEffect(addE('owns').to('a')).sideEffect(addE('likes').to('a'))`)
+    expect(r).toBe(`addV('label', 'cat', 'name', 'spot', 'age', 2).as('a').addV('label', 'person', 'name', 'bob').sideEffect(addE('owns').to('a')).sideEffect(addE('likes').to('a'))`)
 })
 
 test('union steps', () => {
@@ -71,6 +71,32 @@ test('union steps', () => {
     const r = q.getText()
 
     expect(r).toBe(`v().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
+})
+
+test('query cloning', () => {
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+    const q = g().V('1234-abcd-xyz0')
+
+    const q2 = g(q)
+
+    const r = q2.getText()
+
+    expect(r).toBe(`v('1234-abcd-xyz0')`)
+})
+
+test('query cloning - clone is isolated', () => {
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+    const q = g().V('1234-abcd-xyz0')
+
+    const q2 = g(q)
+
+    q.has('a', 'b')
+
+    const r = q2.getText()
+
+    expect(r).toBe(`v('1234-abcd-xyz0')`)
 })
 
 
