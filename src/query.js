@@ -22,11 +22,19 @@ import { coalesce_Text } from './steps/coalesceStep'
 import { count, count_Text } from './steps/countStep'
 import { drop, drop_Text } from './steps/dropStep'
 
-export function g(gToClone) {
+export {g, __, _}
+
+const g = gr('g.')
+
+const __ = gr('__.')
+
+const _ = gr('')
+
+function gr(anonTraversers) { return (gToClone) => {
 
     const query = {}
 
-    const queryString = gToClone ?  [...gToClone.getTextArray()] : []
+    const queryString = gToClone ?  [...gToClone.getTextArray()] : [ ]
 
     // run the query with the graph and a new, empty traversal list
     query.executeRawOut = (graph) => {
@@ -39,7 +47,7 @@ export function g(gToClone) {
 
         return out
     }
-    query.getText = () => queryString.join('.')
+    query.getText = () => anonTraversers + queryString.join('.')
 
     query.getTextArray = () => queryString
 
@@ -104,6 +112,6 @@ export function g(gToClone) {
 
     return query
 }
-
+}
 
 

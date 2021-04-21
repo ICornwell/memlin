@@ -1,4 +1,4 @@
-import { g } from '../query'
+import { g, __ } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -43,6 +43,22 @@ test('sideEffect repeats across traverser', () => {
 
     const q = g().V().hasLabel('software')
         .sideEffect(g().addE('sells').to(g().addV('brand', {name: 'bobsoft'})))
+
+    const r = q.executeRawOut(graph)
+
+    expect(r.graph.vertices.length).toBe(8) // add two new vertices
+    expect(r.graph.edges.length).toBe(9) // add two new edges 
+    
+
+    expect(r.traversers[0].current.label).toBe('software')
+})
+
+test('sideEffect repeats across traverser with __', () => {
+    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+
+    const q = g().V().hasLabel('software')
+        .sideEffect(__().addE('sells').to(__().addV('brand', {name: 'bobsoft'})))
 
     const r = q.executeRawOut(graph)
 

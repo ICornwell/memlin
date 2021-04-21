@@ -1,4 +1,4 @@
-import { g } from '../query'
+import { g, __, _ } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -28,7 +28,7 @@ test('simple getText', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`v('1234-abcd-xyz0')`)
+    expect(r).toBe(`g.v('1234-abcd-xyz0')`)
 })
 
 test('simple getText addE to V with select, as', () => {
@@ -38,7 +38,7 @@ test('simple getText addE to V with select, as', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`addV('label', 'person', 'name', 'bob').as('a').addV('label', 'person', 'name', 'jim').addE('knows').to('a')`)
+    expect(r).toBe(`g.addV('label', 'person', 'name', 'bob').as('a').addV('label', 'person', 'name', 'jim').addE('knows').to('a')`)
 })
 
 test('addE to V with to inner selection', () => {
@@ -48,29 +48,29 @@ test('addE to V with to inner selection', () => {
 
     const r = q.getText()
 
-    expect(r).toBe(`addV('label', 'person', 'name', 'jim').addE('knows').to(v('1234'))`)
+    expect(r).toBe(`g.addV('label', 'person', 'name', 'jim').addE('knows').to(g.v('1234'))`)
 })
 
 test('sideEffect steps', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
     const q = g().addV('cat', { name: 'spot', age: 2 }).as('a').addV('person', { name: 'bob'})
-        .sideEffect(g().addE('owns').to('a'))
-        .sideEffect(g().addE('likes').to('a'))
+        .sideEffect(_().addE('owns').to('a'))
+        .sideEffect(_().addE('likes').to('a'))
     const r = q.getText()
 
-    expect(r).toBe(`addV('label', 'cat', 'name', 'spot', 'age', 2).as('a').addV('label', 'person', 'name', 'bob').sideEffect(addE('owns').to('a')).sideEffect(addE('likes').to('a'))`)
+    expect(r).toBe(`g.addV('label', 'cat', 'name', 'spot', 'age', 2).as('a').addV('label', 'person', 'name', 'bob').sideEffect(addE('owns').to('a')).sideEffect(addE('likes').to('a'))`)
 })
 
 test('union steps', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
     const q = g().V().has('age', 29).union(
-        g().outE('created').inV().hasLabel('person'),
-        g().outE('knows').inV().hasKey('1234') )
+        _().outE('created').inV().hasLabel('person'),
+        _().outE('knows').inV().hasKey('1234') )
     const r = q.getText()
 
-    expect(r).toBe(`v().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
+    expect(r).toBe(`g.v().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
 })
 
 test('query cloning', () => {
@@ -82,7 +82,7 @@ test('query cloning', () => {
 
     const r = q2.getText()
 
-    expect(r).toBe(`v('1234-abcd-xyz0')`)
+    expect(r).toBe(`g.v('1234-abcd-xyz0')`)
 })
 
 test('query cloning - clone is isolated', () => {
@@ -96,7 +96,7 @@ test('query cloning - clone is isolated', () => {
 
     const r = q2.getText()
 
-    expect(r).toBe(`v('1234-abcd-xyz0')`)
+    expect(r).toBe(`g.v('1234-abcd-xyz0')`)
 })
 
 
