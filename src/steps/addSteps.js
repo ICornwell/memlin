@@ -117,7 +117,9 @@ export const addE = (label, props) => (getCurrentContext) => (args) => {
 export const addE_Text = (label, props) => {
     const steps = [`addE('${label}')`]
     if (props)
-        Object.keys(props).forEach(p=>{ steps.push(`property('${p}', '${props[p]}')`)})
+        Object.keys(props)
+            .filter(p=>props[p])
+            .forEach(p=>{ steps.push(`property('${p}', ${sanitise(props[p])})`)})
     return steps.join('.')
 }
 
