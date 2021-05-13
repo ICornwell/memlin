@@ -1,4 +1,5 @@
 import {updateContext, isV, isE, updateTraverser, resolveTraverserArg} from '../traverser'
+import 'regenerator-runtime/runtime'
 
 export const coalesce = (stepsSet) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)

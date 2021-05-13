@@ -19,12 +19,22 @@ import { dedup } from './steps/dedupStep'
 import { dedup_Text } from './steps/dedupStep'
 import { coalesce } from './steps/coalesceStep'
 import { coalesce_Text } from './steps/coalesceStep'
+import { count, count_Text } from './steps/countStep'
+import { drop, drop_Text } from './steps/dropStep'
 
-export function g(gToClone) {
+export {g, __, _}
+
+const g = gr('g.')
+
+const __ = gr('__.')
+
+const _ = gr('')
+
+function gr(anonTraversers) { return (gToClone) => {
 
     const query = {}
 
-    const queryString = []
+    const queryString = gToClone ?  [...gToClone.getTextArray()] : [ ]
 
     // run the query with the graph and a new, empty traversal list
     query.executeRawOut = (graph) => {
@@ -37,7 +47,9 @@ export function g(gToClone) {
 
         return out
     }
-    query.getText = () => queryString.join('.')
+    query.getText = () => anonTraversers + queryString.join('.')
+
+    query.getTextArray = () => queryString
 
     query.subQuery = (context, copyTraversers) => {
         // run the subquery for the same graph, but create a new traversal list
@@ -95,8 +107,11 @@ export function g(gToClone) {
     query.coalesce = (...stepsSet) => { query.query = coalesce(stepsSet)(query.query); queryString.push(coalesce_Text(...stepsSet)); return query }
     query.dedup = () => { query.query = dedup()(query.query); queryString.push(dedup_Text()); return query }
 
+    query.count = () => { query.query = count()(query.query); queryString.push(count_Text()); return query }
+    query.drop = () => { query.query = drop()(query.query); queryString.push(drop_Text()); return query }
+
     return query
 }
-
+}
 
 

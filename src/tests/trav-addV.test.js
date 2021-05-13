@@ -26,4 +26,13 @@ test('add simple vertex to existing graph', () => {
     expect(r.graph.vertices.find(v=>v.label === 'bob').props.age).toBe(37)
 
     expect(r.traversers[0].current.label).toBe('bob')
-});
+})
+
+
+test('addV with props to text', () => {
+    const q = g().addV('person', {metadata: { key1: 'val1', key2: 'val2'}, name: 'bob', age: 27})
+
+    const r = q.getText()
+
+    expect(r).toBe("g.addV('label', 'person', 'name', 'bob', 'age', 27).property(list, 'metadata', 'list', 'key1', 'val1', 'key2', 'val2')")
+})

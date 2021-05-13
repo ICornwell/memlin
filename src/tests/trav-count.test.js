@@ -1,4 +1,4 @@
-import { g, __ } from '../query'
+import { g } from '../query'
 import { newGraph } from '../query'
 
 const testGraph = {
@@ -21,51 +21,24 @@ const testGraph = {
     ]
 }
 
-test('add two edges via sideEffects', () => {
 
 
-    const q = g().addV('cat', { name: 'spot', age: 2 }).as('a').addV('person', { name: 'bob'})
-        .sideEffect(g().addE('owns').to('a'))
-        .sideEffect(g().addE('likes').to('a'))
-
-    const r = q.executeRawOut()
-
-    expect(r.graph.vertices.length).toBe(2)
-    expect(r.graph.edges.length).toBe(2)
-    
-
-    expect(r.traversers[0].current.label).toBe('person')
-})
-
-test('sideEffect repeats across traverser', () => {
+test('count of 6 nodes', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+    const q = g().V().count()
 
+    const r = q.execute(graph)
 
-    const q = g().V().hasLabel('software')
-        .sideEffect(g().addE('sells').to(g().addV('brand', {name: 'bobsoft'})))
-
-    const r = q.executeRawOut(graph)
-
-    expect(r.graph.vertices.length).toBe(8) // add two new vertices
-    expect(r.graph.edges.length).toBe(9) // add two new edges 
-    
-
-    expect(r.traversers[0].current.label).toBe('software')
+    expect(r[0]).toBe(6)
 })
 
-test('sideEffect repeats across traverser with __', () => {
+test('count of 3 edges', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+    const q = g().V().outE('knows').count()
 
+    const r = q.execute(graph)
 
-    const q = g().V().hasLabel('software')
-        .sideEffect(__().addE('sells').to(__().addV('brand', {name: 'bobsoft'})))
-
-    const r = q.executeRawOut(graph)
-
-    expect(r.graph.vertices.length).toBe(8) // add two new vertices
-    expect(r.graph.edges.length).toBe(9) // add two new edges 
-    
-
-    expect(r.traversers[0].current.label).toBe('software')
+    expect(r[0]).toBe(3)
 })
+
 

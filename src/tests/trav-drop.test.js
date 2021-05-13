@@ -17,37 +17,25 @@ const testGraph = {
     ]
 }
 
-test('addE to', () => {
+test('drop vertex', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
-    const q = g().V('1234-abcd-xyz0').addE('knows').to('1234-abcd-xyz1')
+    const q = g().V('').hasLabel('person').drop()
 
     const r = q.executeRawOut(graph)
 
-    expect(r.graph.edges.length).toBe(5)
-    expect(r.traversers[0].current.label).toBe('knows')
-    expect(r.traversers[0].current.inV).toBe('1234-abcd-xyz1')
-    expect(r.traversers[0].current.outV).toBe('1234-abcd-xyz0')
+    expect(r.graph.edges.length).toBe(0)
+    expect(r.graph.vertices.length).toBe(2)
+ 
 })
 
-test('addE to subquery', () => {
+test('drop edge', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
-    const q = g().V('1234-abcd-xyz0').addE('supports').to(g().V().hasLabel('software'))
+    const q = g().E('').hasLabel('created').drop()
 
     const r = q.executeRawOut(graph)
 
-    expect(r.graph.edges.length).toBe(6)
+    expect(r.graph.edges.length).toBe(0)
+    expect(r.graph.vertices.length).toBe(6)
 })
-
-test('addE to subquery + from subquery', () => {
-    const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
-
-    const q = g().addE('supports').from(g().V('1234-abcd-xyz0')).to(g().V().hasLabel('software'))
-
-    const r = q.executeRawOut(graph)
-
-    expect(r.graph.edges.length).toBe(6)
-})
-
-
