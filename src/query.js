@@ -21,6 +21,7 @@ import { coalesce } from './steps/coalesceStep'
 import { coalesce_Text } from './steps/coalesceStep'
 import { count, count_Text } from './steps/countStep'
 import { drop, drop_Text } from './steps/dropStep'
+import { limit, limit_Text } from './steps/limitStep'
 
 export {g, __, _}
 
@@ -106,6 +107,8 @@ function gr(anonTraversers) { return (gToClone) => {
     query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); queryString.push(union_Text(...stepsSet)); return query }
     query.coalesce = (...stepsSet) => { query.query = coalesce(stepsSet)(query.query); queryString.push(coalesce_Text(...stepsSet)); return query }
     query.dedup = () => { query.query = dedup()(query.query); queryString.push(dedup_Text()); return query }
+
+    query.limit = (max) => { query.query = limit(max)(query.query); queryString.push(limit_Text(max)); return query }
 
     query.count = () => { query.query = count()(query.query); queryString.push(count_Text()); return query }
     query.drop = () => { query.query = drop()(query.query); queryString.push(drop_Text()); return query }
