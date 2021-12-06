@@ -1,4 +1,5 @@
 import {updateContext} from '../traverser'
+import sanitiseVal from '../utils/sanitiseVal'
 
 //TODO: All these filters are implemented as full steps except the update the current traverers,
 //  rather than extending the paths. They should be modulators (like to and from) so the preceding
@@ -15,7 +16,7 @@ export const has = (...hasArgs) => {
 }
 
 export const has_Text = (...hasArgs) => {
-    const inner = hasArgs? hasArgs.map(a=>`'${a}'`).join(', ') : ''
+    const inner = hasArgs? hasArgs.map(a=>sanitiseVal(a)).join(', ') : ''
     const steps = [`has(${inner})`]
     return steps.join('.')
 }

@@ -31,6 +31,26 @@ test('simple getText', () => {
     expect(r).toBe(`g.v('1234-abcd-xyz0')`)
 })
 
+test('simple getText, has test with bool val (false)', () => {
+  const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+  const q = g().V('1234-abcd-xyz0').has('myFlag', false)
+
+  const r = q.getText()
+
+  expect(r).toBe(`g.v('1234-abcd-xyz0').has('myFlag', false)`)
+})
+
+test('simple getText, has test with bool val (true)', () => {
+  const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
+
+  const q = g().V('1234-abcd-xyz0').has('myFlag', true)
+
+  const r = q.getText()
+
+  expect(r).toBe(`g.v('1234-abcd-xyz0').has('myFlag', true)`)
+})
+
 test('simple getText addE to V with select, as', () => {
     const graph = { vertices: [...testGraph.vertices], edges: [...testGraph.edges] }
 
@@ -70,7 +90,7 @@ test('union steps', () => {
         _().outE('knows').inV().hasKey('1234') )
     const r = q.getText()
 
-    expect(r).toBe(`g.v().has('age', '29').union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
+    expect(r).toBe(`g.v().has('age', 29).union(outE('created').inV().hasLabel('person'), outE('knows').inV().hasKey('1234'))`)
 })
 
 test('query cloning', () => {
