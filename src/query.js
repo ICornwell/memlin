@@ -22,8 +22,9 @@ import { coalesce_Text } from './steps/coalesceStep'
 import { count, count_Text } from './steps/countStep'
 import { drop, drop_Text } from './steps/dropStep'
 import { limit, limit_Text } from './steps/limitStep'
+import { not, not_Text } from './steps/notStep'
 
-export {g, __, _}
+export { g, __, _ }
 
 const g = gr('g.')
 
@@ -31,90 +32,101 @@ const __ = gr('__.')
 
 const _ = gr('')
 
-function gr(anonTraversers) { return (gToClone) => {
+function gr(anonTraversers) {
+  return (gToClone) => {
 
     const query = {}
 
-    const queryString = gToClone ?  [...gToClone.getTextArray()] : [ ]
+    const queryString = gToClone ? [...gToClone.getTextArray()] : []
 
     // run the query with the graph and a new, empty traversal list
     query.executeRawOut = (graph) => {
-        return query.query({ initGraph: graph })
+      return query.query({ initGraph: graph })
     }
 
     query.execute = (graph) => {
-        const raw = query.query({ initGraph: graph })
-        const out = raw.traversers.map(t => t.current)
+      const raw = query.query({ initGraph: graph })
+      const out = raw.traversers.map(t => t.current)
 
-        return out
+      return out
     }
     query.getText = () => anonTraversers + queryString.join('.')
 
     query.getTextArray = () => queryString
 
     query.subQuery = (context, copyTraversers) => {
-        // run the subquery for the same graph, but create a new traversal list
-        // based on a copy of the head of the parent query
+      // run the subquery for the same graph, but create a new traversal list
+      // based on a copy of the head of the parent query
 
-        // 'copyTraversers' allows the subquery to execute using the traversers
-        // from the outer context
+      // 'copyTraversers' allows the subquery to execute using the traversers
+      // from the outer context
 
-        const args = {
-            initGraph: context.graph,
-            initTraversers: copyTraversers ? [...context.traversers] : null
-        }
+      const args = {
+        initGraph: context.graph,
+        initTraversers: copyTraversers ? [...context.traversers] : null
+      }
 
-        return query.query(args)
-            .traversers.map(t => t.current)
+      return query.query(args)
+        .traversers.map(t => t.current)
     }
 
     // note: query.context.traversers will be undefined unless the (above) subquery
     // was told to copy them from an out query
     if (!gToClone)
-        query.query = (args) => GT(args)
+      query.query = (args) => GT(args)
     else
-        query.query = gToClone.query
+      query.query = gToClone.query
+
+    const queryFunc = (step, stepText, ...args) => queryStepBuilder(query, queryString, step, stepText, ...args)
 
 
     // boilder-plate addition of all the steps to create the fluent chaining methods
-    query.addV = (label, props) => { query.query = addV(label, props)(query.query); queryString.push(addV_Text(label, props)); return query }
-    query.addE = (label, props) => { query.query = addE(label, props)(query.query); queryString.push(addE_Text(label, props)); return query }
-    query.to = (vertex) => { query.query = to(vertex)(query.query); queryString.push(to_Text(vertex)); return query }
-    query.from = (vertex) => { query.query = from(vertex)(query.query); queryString.push(from_Text(vertex)); return query }
+    query.addV = (...args) => queryFunc(addV, addV_Text, ...args)
+    query.addE = (...args) => queryFunc(addE, addE_Text, ...args)
+    query.to = (vertex) => queryFunc(to, to_Text, vertex)
+    query.from = (vertex) => queryFunc(from, from_Text, vertex)
 
-    query.V = (id) => { query.query = V(id)(query.query); queryString.push(v_Text(id)); return query }
-    query.E = (id) => { query.query = E(id)(query.query); queryString.push(e_Text(id)); return query }
+    query.V = (id) => queryFunc(V, v_Text, id)
+    query.E = (id) => queryFunc(E, e_Text, id)
 
-    query.has = (...hasArgs) => { query.query = has(...hasArgs)(query.query); queryString.push(has_Text(...hasArgs)); return query }
-    query.hasLabel = (...hasArgs) => { query.query = hasLabel(...hasArgs)(query.query); queryString.push(hasLabel_Text(...hasArgs)); return query }
-    query.hasKey = (...hasArgs) => { query.query = hasKey(...hasArgs)(query.query); queryString.push(hasKey_Text(...hasArgs)); return query }
+  //  query.has = (...hasArgs) => queryFunc(has(...hasArgs, has_Text, ...hasArgs)
+    query.has = (...hasArgs) => queryFunc(has,has_Text, ...hasArgs)
+    query.hasLabel = (...hasArgs) => queryFunc(hasLabel, hasLabel_Text, ...hasArgs)
+    query.hasKey = (...hasArgs) => queryFunc(hasKey, hasKey_Text, ...hasArgs)
 
-    query.out = (...labels) => { query.query = out(...labels)(query.query); queryString.push(out_Text(...labels)); return query }
-    query.in_ = (...labels) => { query.query = in_(...labels)(query.query); queryString.push(in_Text(...labels)); return query }
-    query.both = (...labels) => { query.query = both(...labels)(query.query); queryString.push(both_Text(...labels)); return query }
-    query.outE = (...labels) => { query.query = outE(...labels)(query.query); queryString.push(outE_Text(...labels)); return query }
-    query.inE = (...labels) => { query.query = inE(...labels)(query.query); queryString.push(inE_Text(...labels)); return query }
-    query.bothE = (...labels) => { query.query = bothE(...labels)(query.query); queryString.push(bothE_Text(...labels)); return query }
-    query.outV = () => { query.query = outV()(query.query); queryString.push(outV_Text()); return query }
-    query.inV = () => { query.query = inV()(query.query); queryString.push(inV_Text()); return query }
-    query.bothV = () => { query.query = bothV()(query.query); queryString.push(bothV_Text()); return query }
+    query.out = (...labels) => queryFunc(out, out_Text, ...labels)
+    query.in_ = (...labels) => queryFunc(in_, in_Text, ...labels)
+    query.both = (...labels) => queryFunc(both, both_Text, ...labels)
+    query.outE = (...labels) => queryFunc(outE, outE_Text, ...labels)
+    query.inE = (...labels) => queryFunc(inE, inE_Text, ...labels)
+    query.bothE = (...labels) => queryFunc(bothE, bothE_Text, ...labels)
+    query.outV = () => queryFunc(outV, outV_Text)
+    query.inV = () => queryFunc(inV, inV_Text)
+    query.bothV = () => queryFunc(bothV, bothV_Text)
 
-    query.as = (...labels) => { query.query = as(...labels)(query.query); queryString.push(as_Text(...labels)); return query }
-    query.select = (...labels) => { query.query = select(...labels)(query.query); queryString.push(select_Text(...labels)); return query }
-    query.by = (...byArgs) => { query.query = by(...byArgs)(query.query); queryString.push(by_Text(...byArgs)); return query }
+    query.as = (...labels) => queryFunc(as, as_Text, ...labels)
+    query.select = (...labels) => queryFunc(select, select_Text, ...labels)
+    query.by = (...byArgs) => queryFunc(by, by_Text, ...byArgs)
 
-    query.sideEffect = (steps) => { query.query = sideEffect(steps)(query.query); queryString.push(sideEffect_Text(steps)); return query }
-    query.union = (...stepsSet) => { query.query = union(stepsSet)(query.query); queryString.push(union_Text(...stepsSet)); return query }
-    query.coalesce = (...stepsSet) => { query.query = coalesce(stepsSet)(query.query); queryString.push(coalesce_Text(...stepsSet)); return query }
-    query.dedup = () => { query.query = dedup()(query.query); queryString.push(dedup_Text()); return query }
+    query.sideEffect = (steps) => queryFunc(sideEffect, sideEffect_Text, steps)
+    query.union = (...stepsSet) => queryFunc(union, union_Text, ...stepsSet)
+    query.coalesce = (...stepsSet) => queryFunc(coalesce, coalesce_Text, ...stepsSet)
+    query.dedup = () => queryFunc(dedup,dedup_Text)
 
-    query.limit = (max) => { query.query = limit(max)(query.query); queryString.push(limit_Text(max)); return query }
+    query.limit = (max) => queryFunc(limit, limit_Text, max)
+    query.not = (steps) => queryFunc(not, not_Text, steps)
 
-    query.count = () => { query.query = count()(query.query); queryString.push(count_Text()); return query }
-    query.drop = () => { query.query = drop()(query.query); queryString.push(drop_Text()); return query }
+    query.count = () => queryFunc(count, count_Text)
+    query.drop = () => queryFunc(drop, drop_Text)
 
     return query
+  }
 }
+
+function queryStepBuilder(query, queryString, step, stepText, ...args) {
+  query.query = step(...args)(query.query)
+  queryString.push(stepText(...args))
+  return query 
 }
 
 

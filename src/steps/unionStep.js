@@ -1,6 +1,6 @@
 import {updateContext, isV, isE, updateTraverser, resolveTraverserArg} from '../traverser'
 
-export const union = (stepsSet) => (getCurrentContext) => (args) => { 
+export const union = (...stepsSet) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
 
     const results = context.traversers.flatMap(t=> {
