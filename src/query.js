@@ -23,7 +23,8 @@ import { count, count_Text } from './steps/countStep'
 import { drop, drop_Text } from './steps/dropStep'
 import { limit, limit_Text } from './steps/limitStep'
 import { not, not_Text } from './steps/notStep'
-
+import { and, and_Text } from './steps/andStep'
+import { or, or_Text } from './steps/orStep'
 export { g, __, _ }
 
 const g = gr('g.')
@@ -115,6 +116,8 @@ function gr(anonTraversers) {
 
     query.limit = (max) => queryFunc(limit, limit_Text, max)
     query.not = (steps) => queryFunc(not, not_Text, steps)
+    query.and = (...steps) => queryFunc(and, and_Text, ...steps)
+    query.or = (...steps) => queryFunc(or, or_Text, ...steps)
 
     query.count = () => queryFunc(count, count_Text)
     query.drop = () => queryFunc(drop, drop_Text)
