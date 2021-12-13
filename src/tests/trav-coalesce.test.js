@@ -1,4 +1,4 @@
-import { g } from '../query'
+import { g, __ } from '../query'
 import { newGraph } from '../query'
 import { V } from '../steps/graphSteps'
 
@@ -78,5 +78,22 @@ test('coalesce satified in middle with side effect', () => {
 
     expect(r2.traversers.length).toBe(1)
     expect(r2.traversers[0].current.props.name).toBe('bob')
+})
+
+test('exists or create - exists', () => {
+  
+  const graph = { vertices: [{ label: 'start', id: 'start'}, ...testGraph.vertices], edges: [...testGraph.edges] }
+
+  const q = g().V('start').coalesce(
+          __().V('1234-abcd-xyz2'),
+          __().addV('person', 'name', 'bob', 'age', 92)
+        )
+
+  const r = q.execute(graph)
+
+  expect(r.length).toBe(1) // add new vertex
+  expect(r[0].props.name).toBe('peter') // add new edge
+  expect(graph.vertices.length).toBe(7)
+
 })
 

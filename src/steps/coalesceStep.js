@@ -1,6 +1,8 @@
 import {updateContext, isV, isE, updateTraverser, resolveTraverserArg} from '../traverser'
 import 'regenerator-runtime/runtime'
 
+const emptyDefaultTraverser = {labels: [], objects: [] }
+
 export const coalesce = (...stepsSet) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
 
@@ -13,7 +15,7 @@ export const coalesce = (...stepsSet) => (getCurrentContext) => (args) => {
             steps => resolveTraverserArg(steps, localContext, true)
                 .map(o=> 
                     o ? updateTraverser(t, o, args)
-                    : null ) ), 
+                    : emptyDefaultTraverser ) ), 
                     t=> t.length  >0 )
     
         return ts
