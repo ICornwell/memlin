@@ -97,3 +97,20 @@ test('exists or create - exists', () => {
 
 })
 
+test('exists or create - new', () => {
+  
+  const graph = { vertices: [{ label: 'start', id: 'start'}, ...testGraph.vertices], edges: [...testGraph.edges] }
+
+  const q = g().V('start').coalesce(
+          __().V('???'),
+          __().addV('person', { 'name': 'bob', 'age': 92 } )
+        )
+
+  const r = q.execute(graph)
+
+  expect(r.length).toBe(1) // add new vertex
+  expect(r[0].props.name).toBe('bob') // add new edge
+  expect(graph.vertices.length).toBe(8)
+
+})
+

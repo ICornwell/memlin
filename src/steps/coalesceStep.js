@@ -16,7 +16,7 @@ export const coalesce = (...stepsSet) => (getCurrentContext) => (args) => {
                 .map(o=> 
                     o ? updateTraverser(t, o, args)
                     : emptyDefaultTraverser ) ), 
-                    t=> t.length  >0 )
+                    t=> t.length > 0 && t[0].objects.length > 0)
     
         return ts
     })   
