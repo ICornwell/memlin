@@ -23,7 +23,7 @@ export function updateTraverser(traverser, obj, args) {
                 objects: obj ? [ obj, ...traverser.objects ] : [ ...traverser.objects ]
                }
     // add the 'current' accessor to get the head of the traverser
-    end.current = end.objects[0]
+    end.current = obj
     return end
 }
 

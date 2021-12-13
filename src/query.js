@@ -49,7 +49,7 @@ function gr(anonTraversers) {
       const raw = query.query({ initGraph: graph })
       const out = raw.traversers.map(t => t.current)
 
-      return out
+      return out.filter(t=> t !== undefined)
     }
     query.getText = () => anonTraversers + queryString.join('.')
 
