@@ -6,10 +6,14 @@ export const property = (name, value) => (getCurrentContext) => (args) => {
 
     context.traversers.forEach(t => {
         if (t.current && t.current.label && !t.current.outV) {// is a vertex
+            if (!t.current.props)
+              t.current.props = {}
             t.current.props[name] = value
-        } else if (t.current && t.current.label && t.current.outV) // is an edge
+        } else if (t.current && t.current.label && t.current.outV) {// is an edge
+            if (!t.current.props)
+              t.current.props = {}
             t.current.props[name] = value
-        else // TODO: should support dropping properties too
+        } else // TODO: should support dropping properties too
             console.log('drop other')
     })
     
