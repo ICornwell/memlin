@@ -102,3 +102,13 @@ test('not outE (2)', () => {
   expect(r.length).toBe(5)
 })
 
+test('not has property', () => {
+  const graph = testGraph
+
+  const q = g().V().has('name', 'marko').not(__().has('height'))
+
+  const r = q.execute(graph)
+
+  expect(r.length).toBe(1)
+})
+

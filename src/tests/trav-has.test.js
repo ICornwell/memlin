@@ -81,3 +81,14 @@ test('has KeyValue', () => {
     expect(r.length).toBe(1)
 })
 
+
+test('not has property', () => {
+  const graph = testGraph
+
+  const q = g().V().has('age')
+
+  const r = q.execute(graph)
+
+  expect(r.length).toBe(4)
+})
+

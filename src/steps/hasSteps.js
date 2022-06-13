@@ -35,7 +35,7 @@ export const hasLabel_Text = (...hasArgs) => {
 
 export const hasKey = (...keys) => (getCurrentContext) => (args) => { 
     const context = getCurrentContext(args)
-    const filtered = context.traversers.filter(t=>t.current.props && Object.keys(t.current).filter(k=>keys.includes(k)))
+    const filtered = context.traversers.filter(t=>t.current.props && Object.keys(t.current.props).find(k=>keys.includes(k)))
     return updateContext(context, filtered)
 }
 
